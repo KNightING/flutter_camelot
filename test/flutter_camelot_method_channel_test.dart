@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_camelot/example/flutter_camelot_method_channel.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_camelot/flutter_camelot_method_channel.dart';
 
 void main() {
   MethodChannelFlutterCamelot platform = MethodChannelFlutterCamelot();

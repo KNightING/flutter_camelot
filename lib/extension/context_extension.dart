@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../camelot.dart';
+import '../widget/camelot.dart';
 
 extension BuildContextExtension on BuildContext {
   CamelotState? get camelot => CamelotState.of(this);
