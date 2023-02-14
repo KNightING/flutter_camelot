@@ -50,7 +50,7 @@ flutter:
         pluginClass: FlutterCamelotPluginCApi
       web:
         pluginClass: FlutterCamelotWeb
-        fileName: flutter_camelot_web.dart
+        fileName: example/flutter_camelot_web.dart
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
