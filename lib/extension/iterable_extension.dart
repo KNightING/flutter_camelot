@@ -7,6 +7,24 @@ extension IterableExtension<T> on Iterable<T> {
     return sum;
   }
 
+  T? firstOrNull(bool Function(T element) test) {
+    late T result;
+    if (isEmpty) return null;
+    var isMatching = false;
+
+    doObverse((index, element) {
+      if (test(element)) {
+        result = element;
+        isMatching = true;
+        return true;
+      }
+      return false;
+    });
+
+    if (isMatching) return result;
+    return null;
+  }
+
   T? lastOrNull(bool Function(T element) test) {
     late T result;
     if (isEmpty) return null;
@@ -20,14 +38,6 @@ extension IterableExtension<T> on Iterable<T> {
       }
       return false;
     });
-
-    // final maxIndex = length - 1;
-    // for (int index = 0; index <= maxIndex; index++) {
-    //   result = elementAt(index);
-    //   if (test(result)) {
-    //     return result;
-    //   }
-    // }
 
     if (isMatching) return result;
     return null;
@@ -43,11 +53,24 @@ extension IterableExtension<T> on Iterable<T> {
   }
 
   /// [test] return true to stop run foreach
-  doReverse(bool Function(int index, T element) test) {
+  doObverse(bool Function(int index, T element) test) {
     if (isEmpty) return;
 
     final maxIndex = length - 1;
     for (int index = 0; index <= maxIndex; index++) {
+      final result = elementAt(index);
+      if (test(index, result)) {
+        return;
+      }
+    }
+  }
+
+  /// [test] return true to stop run foreach
+  doReverse(bool Function(int index, T element) test) {
+    if (isEmpty) return;
+
+    final maxIndex = length - 1;
+    for (int index = maxIndex; index >= 0; index--) {
       final result = elementAt(index);
       if (test(index, result)) {
         return;
