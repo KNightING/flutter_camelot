@@ -7,3 +7,4 @@ export 'extension/iterable_extension.dart';
 export 'extension/theme_extension.dart';
 export 'extension/context_extension.dart';
 export 'extension/kotlin_like_extension.dart';
+export 'extension/dio.dart';
