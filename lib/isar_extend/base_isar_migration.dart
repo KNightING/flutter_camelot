@@ -1,7 +1,7 @@
 import 'package:isar/isar.dart';
 
-abstract class IsarMigration {
-  IsarMigration({
+abstract class BaseIsarMigration {
+  BaseIsarMigration({
     required this.fromVersion,
     required this.toVersion,
   });

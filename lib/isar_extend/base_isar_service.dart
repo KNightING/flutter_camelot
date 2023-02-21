@@ -2,7 +2,7 @@ import 'package:flutter_camelot/extension.dart';
 import 'package:flutter_camelot/isar_extend/version.dart';
 import 'package:isar/isar.dart';
 
-import 'isar_migration.dart';
+import 'base_isar_migration.dart';
 
 abstract class BaseIsarService {
   BaseIsarService({
@@ -15,7 +15,7 @@ abstract class BaseIsarService {
 
   final List<CollectionSchema> schemas;
 
-  final List<IsarMigration> migrations;
+  final List<BaseIsarMigration> migrations;
 
   Isar? _isar;
 
