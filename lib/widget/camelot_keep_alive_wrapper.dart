@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 /// 參考 https://book.flutterchina.club/chapter6/keepalive.html#_6-8-2-keepalivewrapper
 ///
 /// 改使用key做比對, 使用ValueKey or ObjectKey
-class KeepAliveWrapper extends StatefulWidget {
-  const KeepAliveWrapper({
+class CamelotKeepAliveWrapper extends StatefulWidget {
+  const CamelotKeepAliveWrapper({
     required super.key,
     required this.child,
   }) : super();
@@ -13,10 +13,10 @@ class KeepAliveWrapper extends StatefulWidget {
   final Widget child;
 
   @override
-  State<KeepAliveWrapper> createState() => _KeepAliveWrapperState();
+  State<CamelotKeepAliveWrapper> createState() => _CamelotKeepAliveWrapperState();
 }
 
-class _KeepAliveWrapperState extends State<KeepAliveWrapper>
+class _CamelotKeepAliveWrapperState extends State<CamelotKeepAliveWrapper>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class _KeepAliveWrapperState extends State<KeepAliveWrapper>
   }
 
   @override
-  void didUpdateWidget(covariant KeepAliveWrapper oldWidget) {
+  void didUpdateWidget(covariant CamelotKeepAliveWrapper oldWidget) {
     if (oldWidget.key != widget.key) {
       // keepAlive 状态需要更新，实现在 AutomaticKeepAliveClientMixin 中
       updateKeepAlive();

@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 
-class Expansion extends StatelessWidget {
-  const Expansion({
+class CamelotExpansion extends StatelessWidget {
+  const CamelotExpansion({
     Key? key,
     required this.isExpand,
     required this.child,
+    this.openDurationMS = 400,
+    this.closeDurationMS = 600,
     this.collapseChild,
   }) : super(key: key);
 
   final bool isExpand;
+
+  final int openDurationMS;
+
+  final int closeDurationMS;
 
   final Widget? collapseChild;
 
@@ -18,8 +24,8 @@ class Expansion extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedSize(
       duration: isExpand
-          ? const Duration(milliseconds: 400)
-          : const Duration(milliseconds: 600),
+          ? Duration(milliseconds: openDurationMS)
+          : Duration(milliseconds: closeDurationMS),
       curve: Curves.fastOutSlowIn,
       child: Container(
         child: isExpand ? child : collapseChild,
