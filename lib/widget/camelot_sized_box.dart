@@ -2,51 +2,52 @@ import 'package:flutter/material.dart';
 
 ///
 /// 設定寬高的容許值，並控制在上下限內
+/// 適合用在寬高是響應式時
 ///
-class CamelotConstrainedBox extends StatelessWidget {
-  const CamelotConstrainedBox({
+class CamelotSizedBox extends StatelessWidget {
+  const CamelotSizedBox({
     Key? key,
     required this.child,
     required this.lowerLimitWidth,
-    this.allowableWidth,
+    this.width,
     required this.upperLimitWidth,
     required this.lowerLimitHeight,
-    this.allowableHeight,
+    this.height,
     required this.upperLimitHeight,
-  })  : _allowableWidth = allowableWidth ?? upperLimitWidth,
-        _allowableHeight = allowableHeight ?? upperLimitHeight,
+  })  : _width = width ?? upperLimitWidth,
+        _height = height ?? upperLimitHeight,
         super(key: key);
 
-  factory CamelotConstrainedBox.width({
+  factory CamelotSizedBox.width({
     Key? key,
     required Widget child,
     required double lowerLimitWidth,
-    required double allowableWidth,
+    required double width,
     required double upperLimitWidth,
   }) {
-    return CamelotConstrainedBox(
+    return CamelotSizedBox(
         key: key,
         lowerLimitWidth: lowerLimitWidth,
-        allowableWidth: allowableWidth,
+        width: width,
         upperLimitWidth: upperLimitWidth,
         lowerLimitHeight: 0,
         upperLimitHeight: double.infinity,
         child: child);
   }
 
-  factory CamelotConstrainedBox.height({
+  factory CamelotSizedBox.height({
     Key? key,
     required Widget child,
     required double lowerLimitHeight,
-    required double allowableHeight,
+    required double height,
     required double upperLimitHeight,
   }) {
-    return CamelotConstrainedBox(
+    return CamelotSizedBox(
         key: key,
         lowerLimitWidth: 0,
         upperLimitWidth: double.infinity,
         lowerLimitHeight: lowerLimitHeight,
-        allowableHeight: allowableHeight,
+        height: height,
         upperLimitHeight: upperLimitHeight,
         child: child);
   }
@@ -55,41 +56,33 @@ class CamelotConstrainedBox extends StatelessWidget {
 
   final double lowerLimitWidth;
 
-  final double? allowableWidth;
+  final double? width;
 
-  final double _allowableWidth;
+  final double _width;
 
   final double upperLimitWidth;
 
   final double lowerLimitHeight;
 
-  final double? allowableHeight;
+  final double? height;
+
+  final double _height;
 
   final double upperLimitHeight;
 
-  final double _allowableHeight;
-
   @override
   Widget build(BuildContext context) {
-    final maxWidth = _allowableWidth > lowerLimitWidth
-        ? (_allowableWidth > upperLimitWidth
-            ? upperLimitWidth
-            : _allowableWidth)
+    final useWidth = _width > lowerLimitWidth
+        ? (_width > upperLimitWidth ? upperLimitWidth : _width)
         : lowerLimitWidth;
 
-    final maxHeight = _allowableHeight > lowerLimitHeight
-        ? (_allowableHeight > upperLimitHeight
-            ? upperLimitHeight
-            : _allowableHeight)
+    final useHeight = _height > lowerLimitHeight
+        ? (_height > upperLimitHeight ? upperLimitHeight : _height)
         : lowerLimitHeight;
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        minWidth: lowerLimitWidth,
-        maxWidth: maxWidth,
-        minHeight: lowerLimitHeight,
-        maxHeight: maxHeight,
-      ),
+    return SizedBox(
+      width: useWidth,
+      height: useHeight,
       child: child,
     );
   }
