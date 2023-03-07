@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 /// 設定寬高的容許值，並控制在上下限內
 /// 適合用在寬高是響應式時
 ///
-class CamelotSizedBox extends StatelessWidget {
-  const CamelotSizedBox({
+class CamelotLimitBox extends StatelessWidget {
+  const CamelotLimitBox({
     Key? key,
     required this.child,
     required this.lowerLimitWidth,
@@ -18,14 +18,14 @@ class CamelotSizedBox extends StatelessWidget {
         _height = height ?? upperLimitHeight,
         super(key: key);
 
-  factory CamelotSizedBox.width({
+  factory CamelotLimitBox.width({
     Key? key,
     required Widget child,
     required double lowerLimitWidth,
     required double width,
     required double upperLimitWidth,
   }) {
-    return CamelotSizedBox(
+    return CamelotLimitBox(
         key: key,
         lowerLimitWidth: lowerLimitWidth,
         width: width,
@@ -35,14 +35,14 @@ class CamelotSizedBox extends StatelessWidget {
         child: child);
   }
 
-  factory CamelotSizedBox.height({
+  factory CamelotLimitBox.height({
     Key? key,
     required Widget child,
     required double lowerLimitHeight,
     required double height,
     required double upperLimitHeight,
   }) {
-    return CamelotSizedBox(
+    return CamelotLimitBox(
         key: key,
         lowerLimitWidth: 0,
         upperLimitWidth: double.infinity,
