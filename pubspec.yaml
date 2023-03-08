@@ -15,7 +15,7 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   plugin_platform_interface: ^2.1.4
-  intl: ^0.18.0 # i18n
+  intl: ^0.17.0 # i18n
 
   freezed_annotation: ^2.2.0
   json_annotation: ^4.8.0

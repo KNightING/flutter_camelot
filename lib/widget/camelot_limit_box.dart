@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 
+enum CamelotLimitBoxSizeMode {
+  limit,
+  wrapContent,
+}
+
 class CamelotLimitBox extends StatelessWidget {
   /// 設定寬高的容許值，並控制在上下限內
   /// 適合用在寬高是響應式時
+  /// width/height 為 null時 會同upper
   const CamelotLimitBox({
     Key? key,
     required this.child,
+    this.widthMode = CamelotLimitBoxSizeMode.limit,
     required this.lowerLimitWidth,
     this.width,
     required this.upperLimitWidth,
+    this.heightMode = CamelotLimitBoxSizeMode.limit,
     required this.lowerLimitHeight,
     this.height,
     required this.upperLimitHeight,
@@ -28,6 +36,7 @@ class CamelotLimitBox extends StatelessWidget {
         lowerLimitWidth: lowerLimitWidth,
         width: width,
         upperLimitWidth: upperLimitWidth,
+        heightMode: CamelotLimitBoxSizeMode.wrapContent,
         lowerLimitHeight: 0,
         upperLimitHeight: double.infinity,
         child: child);
@@ -56,6 +65,7 @@ class CamelotLimitBox extends StatelessWidget {
   }) {
     return CamelotLimitBox(
         key: key,
+        widthMode: CamelotLimitBoxSizeMode.wrapContent,
         lowerLimitWidth: 0,
         upperLimitWidth: double.infinity,
         lowerLimitHeight: lowerLimitHeight,
@@ -80,6 +90,8 @@ class CamelotLimitBox extends StatelessWidget {
 
   final Widget child;
 
+  final CamelotLimitBoxSizeMode widthMode;
+
   final double lowerLimitWidth;
 
   final double? width;
@@ -87,6 +99,8 @@ class CamelotLimitBox extends StatelessWidget {
   final double _width;
 
   final double upperLimitWidth;
+
+  final CamelotLimitBoxSizeMode heightMode;
 
   final double lowerLimitHeight;
 
@@ -98,13 +112,24 @@ class CamelotLimitBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final useWidth = _width > lowerLimitWidth
-        ? (_width > upperLimitWidth ? upperLimitWidth : _width)
-        : lowerLimitWidth;
+    final double? useWidth;
+    if (widthMode == CamelotLimitBoxSizeMode.limit) {
+      useWidth = _width > lowerLimitWidth
+          ? (_width > upperLimitWidth ? upperLimitWidth : _width)
+          : lowerLimitWidth;
+    } else {
+      useWidth = null;
+    }
 
-    final useHeight = _height > lowerLimitHeight
-        ? (_height > upperLimitHeight ? upperLimitHeight : _height)
-        : lowerLimitHeight;
+    final double? useHeight;
+
+    if (heightMode == CamelotLimitBoxSizeMode.limit) {
+      useHeight = _height > lowerLimitHeight
+          ? (_height > upperLimitHeight ? upperLimitHeight : _height)
+          : lowerLimitHeight;
+    } else {
+      useHeight = null;
+    }
 
     return SizedBox(
       width: useWidth,
