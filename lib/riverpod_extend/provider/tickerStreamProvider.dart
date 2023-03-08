@@ -16,6 +16,8 @@ StreamProvider<DateTime> tickerStreamProvider({required Duration duration}) {
       listen.cancel();
     });
 
-    yield* ticker;
+    await for (final dateTime in ticker) {
+      yield dateTime;
+    }
   });
 }
