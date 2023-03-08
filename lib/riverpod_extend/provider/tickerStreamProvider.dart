@@ -4,7 +4,7 @@ StreamProvider<DateTime> tickerStreamProvider({required Duration duration}) {
   return StreamProvider<DateTime>((ref) async* {
     var now = DateTime.now();
     yield now;
-    if (duration.inSeconds <= 60 && now.second != 0) {
+    if (duration.inSeconds >= 60 && now.second != 0) {
       // 校正
       await Future.delayed(Duration(seconds: 60 - now.second));
       yield DateTime.now();
