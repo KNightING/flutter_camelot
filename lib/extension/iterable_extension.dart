@@ -82,4 +82,19 @@ extension IterableExtension<T> on Iterable<T> {
     final maxIndex = length - 1;
     return Iterable.generate(length, (index) => elementAt(maxIndex - index));
   }
+
+  Iterable<T> whereWithIndex(bool Function(int index, T element) test) {
+    final result = [];
+
+    if (isEmpty) return Iterable.castFrom(result);
+
+    doObverse((index, element) {
+      if (test(index, element)) {
+        result.add(element);
+        return true;
+      }
+      return false;
+    });
+    return Iterable.castFrom(result);
+  }
 }
