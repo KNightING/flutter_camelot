@@ -91,7 +91,6 @@ extension IterableExtension<T> on Iterable<T> {
     doObverse((index, element) {
       if (test(index, element)) {
         result.add(element);
-        return true;
       }
       return false;
     });
