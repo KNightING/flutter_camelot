@@ -31,14 +31,28 @@ class CamelotLog {
 
   static void error(String message) => write(CamelotLogLevel.error, message);
 
+  static void errorAndStackTrace(Error error, StackTrace stackTrace) =>
+      write(CamelotLogLevel.error, '$error\n$stackTrace');
+
+  static void errorRaw(Error error) =>
+      write(CamelotLogLevel.error, error.toString());
+
+  static void exception(Exception exception) =>
+      write(CamelotLogLevel.error, exception.toString());
+
+  static void stackTrace(StackTrace stackTrace) =>
+      write(CamelotLogLevel.error, '\n$stackTrace');
+
+  static void stackTraceCurrent() => stackTrace(StackTrace.current);
+
   static void clear() => controller.add(
-    CamelotLogData(
-      timestamp: DateTime.now().millisecondsSinceEpoch,
-      level: CamelotLogLevel.info,
-      message: '',
-      event: CamelotLogEvent.clear,
-    ),
-  );
+        CamelotLogData(
+          timestamp: DateTime.now().millisecondsSinceEpoch,
+          level: CamelotLogLevel.info,
+          message: '',
+          event: CamelotLogEvent.clear,
+        ),
+      );
 }
 
 class CamelotLogData {
