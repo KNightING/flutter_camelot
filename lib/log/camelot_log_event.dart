@@ -1,0 +1,1 @@
+enum CamelotLogEvent { add, clear }
