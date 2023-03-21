@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_camelot/camelot_run_app.dart';
 import 'package:flutter_camelot/example/flutter_camelot.dart';
 import 'package:flutter_camelot/log/camelot_log.dart';
+import 'package:flutter_camelot/util/device_util.dart';
 import 'package:flutter_camelot/widget/camelot.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MyApp()));
+  camelotRunApp(
+    initAsyncApp: () async {
+      await CamelotDeviceUtil.landscape();
+    },
+    app: const ProviderScope(child: MyApp()),
+  );
 }
 
 class MyApp extends StatefulWidget {

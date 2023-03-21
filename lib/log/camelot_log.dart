@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../camelot_run_app.dart';
 import 'camelot_log_event.dart';
 import 'camelot_log_level.dart';
 import 'camelot_log_provider.dart';
@@ -18,9 +19,9 @@ class CamelotLog {
     );
 
     controller.add(data);
-    if (kDebugMode) {
-      print(data.toString());
-    }
+    // if (kDebugMode && !runWithCamelotApp) {
+    //   print(data.toString());
+    // }
   }
 
   static void debug(String message) => write(CamelotLogLevel.debug, message);
@@ -33,6 +34,9 @@ class CamelotLog {
 
   static void errorAndStackTrace(Error error, StackTrace stackTrace) =>
       write(CamelotLogLevel.error, '$error\n$stackTrace');
+
+  static void errorObjAndStackTrace(Object error, StackTrace stackTrace) =>
+      write(CamelotLogLevel.error, '${Error.safeToString(error)}\n$stackTrace');
 
   static void errorRaw(Error error) =>
       write(CamelotLogLevel.error, error.toString());

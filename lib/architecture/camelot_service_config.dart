@@ -1,37 +1,37 @@
-
 import 'loading_on.dart';
 
 abstract class CamelotServiceConfig {
+  factory CamelotServiceConfig({
+    required LoadingOnDialogController controller,
+    Function(String message)? loadingOnStart,
+    Function? loadingOnEnd,
+  }) = _CamelotServiceConfig;
 
-  LoadingOnDialogController buildLoadingOnDialogController();
+  LoadingOnDialogController get controller;
 
-  loadingOnStart(String message);
+  void Function(String message)? get loadingOnStart;
 
-  loadingOnEnd();
+  Function? get loadingOnEnd;
 }
 
-class DefaultLoadingOnDialogController extends LoadingOnDialogController{
+class _CamelotServiceConfig implements CamelotServiceConfig {
+  const _CamelotServiceConfig({
+    required this.controller,
+    this.loadingOnStart,
+    this.loadingOnEnd,
+  });
+
   @override
-  setMessage(String msg) {
-  }
+  final LoadingOnDialogController controller;
+
+  @override
+  final Function(String message)? loadingOnStart;
+
+  @override
+  final Function? loadingOnEnd;
 }
 
-
-class DefaultCamelotServiceConfig extends CamelotServiceConfig{
-
+class DefaultLoadingOnDialogController extends LoadingOnDialogController {
   @override
-  LoadingOnDialogController buildLoadingOnDialogController() {
-    return DefaultLoadingOnDialogController();
-  }
-
-  @override
-  loadingOnEnd() {
-
-  }
-
-  @override
-  loadingOnStart(String message) {
-
-  }
-
+  setMessage(String msg) {}
 }

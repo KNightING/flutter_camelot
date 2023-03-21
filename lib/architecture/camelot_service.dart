@@ -9,5 +9,7 @@ class CamelotService {
     return _singleton;
   }
 
-  CamelotServiceConfig config = DefaultCamelotServiceConfig();
+  CamelotServiceConfig config = CamelotServiceConfig(
+    controller: DefaultLoadingOnDialogController(),
+  );
 }

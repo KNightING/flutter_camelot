@@ -8,15 +8,17 @@ abstract class LoadingOnDialogController {
   setMessage(String msg);
 }
 
-Future<T?> loadingOn<T>(LoadingOnWork<T> work,
-    {String message = "loading..."}) async {
+Future<T?> loadingOn<T>(
+  LoadingOnWork<T> work, {
+  String message = "loading...",
+}) async {
   return await CamelotService().config.let((config) async {
     try {
-      final controller = config.buildLoadingOnDialogController();
-      config.loadingOnStart(message);
+      final controller = config.controller;
+      config.loadingOnStart?.call(message);
       return await work(controller);
     } finally {
-      config.loadingOnEnd();
+      config.loadingOnEnd?.call();
     }
   });
 }
