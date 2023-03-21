@@ -1,17 +1,27 @@
+import 'package:flutter/animation.dart';
+
 import 'loading_on.dart';
+
+typedef LoadingOnStart = void Function(String message);
+
+typedef HandleUncaughtError = void Function(
+    bool isMain, Object error, StackTrace stack);
 
 abstract class CamelotServiceConfig {
   factory CamelotServiceConfig({
     required LoadingOnDialogController controller,
-    Function(String message)? loadingOnStart,
-    Function? loadingOnEnd,
+    LoadingOnStart? loadingOnStart,
+    VoidCallback loadingOnEnd,
+    HandleUncaughtError? handleUncaughtError,
   }) = _CamelotServiceConfig;
 
   LoadingOnDialogController get controller;
 
-  void Function(String message)? get loadingOnStart;
+  LoadingOnStart? get loadingOnStart;
 
-  Function? get loadingOnEnd;
+  VoidCallback? get loadingOnEnd;
+
+  HandleUncaughtError? get handleUncaughtError;
 }
 
 class _CamelotServiceConfig implements CamelotServiceConfig {
@@ -19,16 +29,20 @@ class _CamelotServiceConfig implements CamelotServiceConfig {
     required this.controller,
     this.loadingOnStart,
     this.loadingOnEnd,
+    this.handleUncaughtError,
   });
 
   @override
   final LoadingOnDialogController controller;
 
   @override
-  final Function(String message)? loadingOnStart;
+  final LoadingOnStart? loadingOnStart;
 
   @override
-  final Function? loadingOnEnd;
+  final VoidCallback? loadingOnEnd;
+
+  @override
+  final HandleUncaughtError? handleUncaughtError;
 }
 
 class DefaultLoadingOnDialogController extends LoadingOnDialogController {

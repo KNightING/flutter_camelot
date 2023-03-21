@@ -24,25 +24,19 @@ class CamelotLog {
     // }
   }
 
-  static void debug(String message) => write(CamelotLogLevel.debug, message);
+  static void debug(String message) {
+    if (kDebugMode) {
+      write(CamelotLogLevel.debug, message);
+    }
+  }
 
   static void info(String message) => write(CamelotLogLevel.info, message);
 
   static void warn(String message) => write(CamelotLogLevel.warn, message);
 
-  static void error(String message) => write(CamelotLogLevel.error, message);
-
-  static void errorAndStackTrace(Error error, StackTrace stackTrace) =>
-      write(CamelotLogLevel.error, '$error\n$stackTrace');
-
-  static void errorObjAndStackTrace(Object error, StackTrace stackTrace) =>
-      write(CamelotLogLevel.error, '${Error.safeToString(error)}\n$stackTrace');
-
-  static void errorRaw(Error error) =>
-      write(CamelotLogLevel.error, error.toString());
-
-  static void exception(Exception exception) =>
-      write(CamelotLogLevel.error, exception.toString());
+  static void error(Object error, {StackTrace? stackTrace}) => write(
+      CamelotLogLevel.error,
+      '$error\n\nWhen the exception was thrown, this was the stack:\n$stackTrace');
 
   static void stackTrace(StackTrace stackTrace) =>
       write(CamelotLogLevel.error, '\n$stackTrace');

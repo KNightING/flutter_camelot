@@ -89,16 +89,19 @@ class _MyAppState extends State<MyApp> {
                   icon: const Icon(
                     Icons.edit,
                   ),
-                  onPressed: () {
-                    CLog.debug('debug');
-                    CLog.info('info');
-                    CLog.warn('warn');
-                    CLog.error('error');
-                    try {
-                      throw FlutterError('test exception');
-                    } on Error catch (e, s) {
-                      CLog.errorAndStackTrace(e, s);
-                    }
+                  onPressed: () async {
+                    // CLog.debug('debug');
+                    // CLog.info('info');
+                    // CLog.warn('warn');
+                    // CLog.error('error');
+                    // try {
+                    //   throw FlutterError('test exception');
+                    // } on Error catch (e, s) {
+                    //   CLog.errorAndStackTrace(e, s);
+                    // }
+                    print('test');
+                    throw Exception('test');
+                    throw FlutterError('message');
                   },
                 ),
                 Text('Running on: $_platformVersion\n'),

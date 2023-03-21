@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_camelot/architecture/camelot_service.dart';
 import 'package:flutter_camelot/log/camelot_log.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'architecture/camelot_service_config.dart';
 
@@ -18,30 +19,77 @@ void camelotRunApp({
   required Widget app,
   CamelotServiceConfig? config,
 }) {
-  camelotZonedGuarded(() async {
-    await initAsyncApp?.call();
-    if (config != null) {
-      CamelotService().config = config;
-    }
-    _runWithCamelotApp = true;
-    return runApp(app);
-  });
+  // 攔截 Flutter同步異常
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+
+    final error = details.exception;
+    final stack = details.stack ?? StackTrace.current;
+    CLog.error(error, stackTrace: stack);
+    config?.handleUncaughtError?.call(true, error, stack);
+    if (kReleaseMode) exit(1);
+  };
+
+  // 攔截 異步異常 同runZoned但是無法寫到IDE的console
+  // PlatformDispatcher.instance.onError = (error, stack) {
+  //   CLog.error(error, stackTrace: stack);
+  //   config?.handleUncaughtError?.call(false, error, stack);
+  //   return true;
+  // };
+  // return runApp(app);
+
+  camelotZonedGuarded(
+    () async {
+      await initAsyncApp?.call();
+      if (config != null) {
+        CamelotService().config = config;
+      }
+      _runWithCamelotApp = true;
+      return runApp(app);
+    },
+    handleUncaughtError: config?.handleUncaughtError,
+  );
 }
 
-R? camelotZonedGuarded<R>(R Function() body) {
-  return runZonedGuarded(
+R? camelotZonedGuarded<R>(
+  R Function() body, {
+  HandleUncaughtError? handleUncaughtError,
+}) {
+  return runZoned(
     body,
-    (Object obj, StackTrace stack) {
-      CLog.errorObjAndStackTrace(obj, stack);
-    },
     zoneSpecification: ZoneSpecification(
       print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
-        CLog.debug(line);
+        if (kDebugMode) {
+          parent.print(zone, line);
+          CLog.debug(line);
+        }
       },
       handleUncaughtError: (Zone self, ZoneDelegate parent, Zone zone,
           Object obj, StackTrace stack) {
-        CLog.errorObjAndStackTrace(obj, stack);
+        // 這裡只會攔截到async function的異常錯誤 / runZonedGuarded的onError相同
+        parent.handleUncaughtError(zone, obj, stack);
+        CLog.error(obj, stackTrace: stack);
+        handleUncaughtError?.call(false, obj, stack);
       },
     ),
   );
+  // return runZonedGuarded(
+  //   body,
+  //   (Object obj, StackTrace stack) {
+  //     CLog.error(obj, stackTrace: stack);
+  //     handleUncaughtError?.call(false, obj, stack);
+  //   },
+  //   zoneSpecification: ZoneSpecification(
+  //     print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
+  //       parent.print(zone, line);
+  //       CLog.debug(line);
+  //     },
+  //     handleUncaughtError: (Zone self, ZoneDelegate parent, Zone zone,
+  //         Object obj, StackTrace stack) {
+  //       parent.handleUncaughtError(zone, obj, stack);
+  //       CLog.error(obj, stackTrace: stack);
+  //       handleUncaughtError?.call(false, obj, stack);
+  //     },
+  //   ),
+  // );
 }
