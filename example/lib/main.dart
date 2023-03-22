@@ -79,10 +79,21 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CamelotBorderBox(
-                  onTap: () {},
-                  border: Border.all(),
+                CamelotBox(
+                  color: Colors.redAccent,
                   padding: const EdgeInsets.all(20),
+                  boxShadow: const [
+                    BoxShadow(
+                      offset: Offset(0, 0),
+                      color: Colors.tealAccent,
+                      blurRadius: 6,
+                    ),
+                    BoxShadow(
+                      offset: Offset(5, 5),
+                      color: Colors.blueAccent,
+                      blurRadius: 6,
+                    ),
+                  ],
                   borderRadius: BorderRadius.circular(10),
                   child: Text('test'),
                 ),
