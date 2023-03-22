@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_camelot/extension/context_extension.dart';
 
 class CamelotIconButton extends StatelessWidget {
   const CamelotIconButton(
     this.icon, {
     Key? key,
-    this.size = 36,
-    this.iconSize = 30,
-    this.iconColor,
+    this.size = 34,
+    this.iconSize = 26,
     this.padding = EdgeInsets.zero,
     required this.onPressed,
     this.color,
@@ -27,8 +27,6 @@ class CamelotIconButton extends StatelessWidget {
   final double size;
 
   final double iconSize;
-
-  final Color? iconColor;
 
   final EdgeInsetsGeometry padding;
 
@@ -58,12 +56,14 @@ class CamelotIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = context.colorScheme;
+
     return IconButton(
       padding: padding,
       alignment: Alignment.center,
       constraints: BoxConstraints.tight(Size(size, size)),
       iconSize: iconSize,
-      color: color,
+      color: color ?? cs?.primary,
       focusColor: focusColor,
       hoverColor: hoverColor,
       highlightColor: highlightColor,
@@ -71,10 +71,7 @@ class CamelotIconButton extends StatelessWidget {
       disabledColor: disabledColor,
       onPressed: onPressed,
       tooltip: tooltip,
-      icon: Icon(
-        icon,
-        color: iconColor,
-      ),
+      icon: Icon(icon),
       isSelected: isSelected,
       selectedIcon: selectedIcon,
       focusNode: focusNode,

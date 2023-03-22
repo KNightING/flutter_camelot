@@ -6,6 +6,7 @@ import 'package:flutter_camelot/camelot_run_app.dart';
 import 'package:flutter_camelot/example/flutter_camelot.dart';
 import 'package:flutter_camelot/log/camelot_log.dart';
 import 'package:flutter_camelot/util/device_util.dart';
+import 'package:flutter_camelot/widget.dart';
 import 'package:flutter_camelot/widget/camelot.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -78,6 +79,23 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                CamelotBorderBox(
+                  onTap: () {},
+                  border: Border.all(),
+                  padding: const EdgeInsets.all(20),
+                  borderRadius: BorderRadius.circular(10),
+                  child: Text('test'),
+                ),
+                OutlinedButton(
+                    onPressed: () {},
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Text('test'),
+                    )),
                 IconButton(
                   padding: EdgeInsets.zero,
                   alignment: Alignment.center,

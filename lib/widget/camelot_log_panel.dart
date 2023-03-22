@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_camelot/extension/context_extension.dart';
+import 'package:flutter_camelot/widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../log/camelot_log.dart';
@@ -132,35 +133,21 @@ class _CamelotLogPanelState extends ConsumerState<CamelotLogPanel> {
                                   ),
                                 ),
                                 const Spacer(),
-                                IconButton(
+                                CamelotIconButton(
+                                  Icons.delete_outline,
                                   tooltip: 'CLEAR LOG',
-                                  padding: EdgeInsets.zero,
-                                  alignment: Alignment.center,
                                   iconSize: 20,
-                                  splashRadius: 32,
-                                  constraints: BoxConstraints.tight(
-                                    const Size(32, 32),
-                                  ),
-                                  icon: const Icon(
-                                    Icons.delete_outline,
-                                  ),
+                                  size: 32,
                                   onPressed: () {
                                     CLog.clear();
                                   },
                                 ),
                                 const SizedBox(width: 10),
-                                IconButton(
+                                CamelotIconButton(
+                                  Icons.close_outlined,
                                   tooltip: 'CLOSE PANEL',
-                                  padding: EdgeInsets.zero,
-                                  alignment: Alignment.center,
                                   iconSize: 20,
-                                  splashRadius: 32,
-                                  constraints: BoxConstraints.tight(
-                                    const Size(32, 32),
-                                  ),
-                                  icon: const Icon(
-                                    Icons.close_outlined,
-                                  ),
+                                  size: 32,
                                   onPressed: () {
                                     ref
                                         .read(camelotLogPanelProvider.notifier)
