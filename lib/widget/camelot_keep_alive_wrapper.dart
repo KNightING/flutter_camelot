@@ -13,7 +13,8 @@ class CamelotKeepAliveWrapper extends StatefulWidget {
   final Widget child;
 
   @override
-  State<CamelotKeepAliveWrapper> createState() => _CamelotKeepAliveWrapperState();
+  State<CamelotKeepAliveWrapper> createState() =>
+      _CamelotKeepAliveWrapperState();
 }
 
 class _CamelotKeepAliveWrapperState extends State<CamelotKeepAliveWrapper>

@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_camelot/widget/camelot_log_panel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../log/camelot_log.dart';
-import '../log/camelot_log_provider.dart';
-
 class Camelot extends ConsumerStatefulWidget {
   const Camelot({
     Key? key,
     required this.child,
     this.enableLogPanel = true,
     this.logPanelHeight = 400,
+    this.whenTapClearFocus = true,
   }) : super(key: key);
 
   final bool enableLogPanel;
@@ -18,6 +16,8 @@ class Camelot extends ConsumerStatefulWidget {
   final double logPanelHeight;
 
   final Widget child;
+
+  final bool whenTapClearFocus;
 
   @override
   ConsumerState createState() => CamelotState();
@@ -33,14 +33,22 @@ class CamelotState extends ConsumerState<Camelot> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Stack(
-        children: [
-          widget.child,
-          CamelotLogPanel(
-            enable: widget.enableLogPanel,
-            height: widget.logPanelHeight,
-          ),
-        ],
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          if (widget.whenTapClearFocus) {
+            FocusScope.of(context).unfocus();
+          }
+        },
+        child: Stack(
+          children: [
+            widget.child,
+            CamelotLogPanel(
+              enable: widget.enableLogPanel,
+              height: widget.logPanelHeight,
+            ),
+          ],
+        ),
       ),
     );
   }
