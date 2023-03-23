@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_camelot/extension/context_extension.dart';
 
-// 整合 Padding, InkWell, Ink, Material
-class CamelotBox extends StatelessWidget {
-  const CamelotBox({
+import 'camelot_limit_box.dart';
+
+typedef CContainer = CamelotContainer;
+
+class CamelotContainer extends StatelessWidget {
+  /// 整合 [Padding], [InkWell], [Ink], [Material], [CamelotLimitBox]
+  const CamelotContainer({
     Key? key,
     required this.child,
+    this.useInkWell = true,
     this.showBorder = true,
     this.color = Colors.transparent,
+    this.gradient,
     this.backgroundColor = Colors.transparent,
     this.borderRadius = BorderRadius.zero,
     this.side = BorderSide.none,
     this.border,
     this.onTap,
     this.padding = EdgeInsets.zero,
+    this.margin = EdgeInsets.zero,
     this.mouseCursor,
     this.focusColor,
     this.hoverColor,
@@ -31,9 +38,38 @@ class CamelotBox extends StatelessWidget {
     this.onTapCancel,
     this.onHighlightChanged,
     this.onHover,
-  }) : super(key: key);
+    CamelotLimitBoxSizeMode? widthMode,
+    this.lowerLimitWidth = 0,
+    this.width = double.infinity,
+    this.upperLimitWidth = double.infinity,
+    CamelotLimitBoxSizeMode? heightMode,
+    this.lowerLimitHeight = 0,
+    this.height = double.infinity,
+    this.upperLimitHeight = double.infinity,
+    // CamelotLimitBoxSizeMode? widthMode,
+    // double? lowerLimitWidth,
+    // this.width = 0,
+    // double? upperLimitWidth,
+    // CamelotLimitBoxSizeMode? heightMode,
+    // double? lowerLimitHeight,
+    // this.height = 0,
+    // double? upperLimitHeight,
+  })  :
+        // upperLimitWidth = upperLimitWidth ?? width,
+        // upperLimitHeight = upperLimitHeight ?? height,
+        widthMode = widthMode ??
+            (width == double.infinity && lowerLimitWidth == 0
+                ? CamelotLimitBoxSizeMode.wrapContent
+                : CamelotLimitBoxSizeMode.limit),
+        heightMode = heightMode ??
+            (height == double.infinity && lowerLimitHeight == 0
+                ? CamelotLimitBoxSizeMode.wrapContent
+                : CamelotLimitBoxSizeMode.limit),
+        super(key: key);
 
   final Widget child;
+
+  final bool useInkWell;
 
   final double elevation;
 
@@ -42,7 +78,10 @@ class CamelotBox extends StatelessWidget {
 
   final bool showBorder;
 
+  /// [gradient] 優先於 [color]
   final Color color;
+
+  final Gradient? gradient;
 
   final Color backgroundColor;
 
@@ -71,6 +110,8 @@ class CamelotBox extends StatelessWidget {
 
   final EdgeInsets padding;
 
+  final EdgeInsets margin;
+
   final MouseCursor? mouseCursor;
 
   final Color? focusColor;
@@ -88,9 +129,39 @@ class CamelotBox extends StatelessWidget {
   // when color is transparent that boxShadow is not work.
   final List<BoxShadow>? boxShadow;
 
+  final CamelotLimitBoxSizeMode widthMode;
+
+  final double lowerLimitWidth;
+
+  final double? width;
+
+  final double upperLimitWidth;
+
+  final CamelotLimitBoxSizeMode heightMode;
+
+  final double lowerLimitHeight;
+
+  final double? height;
+
+  final double upperLimitHeight;
+
   @override
   Widget build(BuildContext context) {
     var _child = child;
+
+    if (width != null || height != null) {
+      _child = CamelotLimitBox(
+        widthMode: widthMode,
+        lowerLimitWidth: lowerLimitWidth,
+        width: width,
+        upperLimitWidth: upperLimitWidth,
+        heightMode: heightMode,
+        lowerLimitHeight: lowerLimitHeight,
+        height: height,
+        upperLimitHeight: upperLimitHeight,
+        child: _child,
+      );
+    }
 
     if (padding != EdgeInsets.zero) {
       _child = Padding(
@@ -99,29 +170,48 @@ class CamelotBox extends StatelessWidget {
       );
     }
 
-    _child = InkWell(
-      borderRadius: borderRadius,
-      onTap: onTap,
-      onLongPress: onLongPress,
-      onDoubleTap: onDoubleTap,
-      onHover: onHover,
-      onTapUp: onTapUp,
-      onTapDown: onTapDown,
-      onTapCancel: onTapCancel,
-      onHighlightChanged: onHighlightChanged,
-      mouseCursor: mouseCursor,
-      focusColor: focusColor,
-      highlightColor: highlightColor,
-      overlayColor: overlayColor,
-      splashColor: splashColor,
-      splashFactory: splashFactory,
-      child: _child,
-    );
+    if (useInkWell) {
+      _child = InkWell(
+        borderRadius: borderRadius,
+        onTap: onTap,
+        onLongPress: onLongPress,
+        onDoubleTap: onDoubleTap,
+        onHover: onHover,
+        onTapUp: onTapUp,
+        onTapDown: onTapDown,
+        onTapCancel: onTapCancel,
+        onHighlightChanged: onHighlightChanged,
+        mouseCursor: mouseCursor,
+        focusColor: focusColor,
+        highlightColor: highlightColor,
+        overlayColor: overlayColor,
+        splashColor: splashColor,
+        splashFactory: splashFactory,
+        child: _child,
+      );
+    } else {
+      _child = GestureDetector(
+        onTap: onTap,
+        onLongPress: onLongPress,
+        onDoubleTap: onDoubleTap,
+        onTapUp: onTapUp,
+        onTapDown: onTapDown,
+        onTapCancel: onTapCancel,
+        child: MouseRegion(
+          cursor: mouseCursor ?? SystemMouseCursors.click,
+          child: _child,
+        ),
+      );
+    }
 
-    if (border != null || color != Colors.transparent || boxShadow != null) {
+    if (border != null ||
+        color != Colors.transparent ||
+        boxShadow != null ||
+        gradient != null) {
       _child = Ink(
         decoration: BoxDecoration(
-          color: color,
+          color: gradient != null ? null : color,
+          gradient: gradient,
           borderRadius: borderRadius,
           border: showBorder ? border : null,
           boxShadow: boxShadow,
@@ -187,7 +277,7 @@ class CamelotBox extends StatelessWidget {
       }
     }
 
-    return Material(
+    _child = Material(
       color: backgroundColor,
       elevation: elevation,
       shadowColor: shadowColor ?? context.colorScheme?.shadow,
@@ -197,5 +287,14 @@ class CamelotBox extends StatelessWidget {
       ),
       child: _child,
     );
+
+    if (margin != EdgeInsets.zero) {
+      _child = Padding(
+        padding: margin,
+        child: _child,
+      );
+    }
+
+    return _child;
   }
 }

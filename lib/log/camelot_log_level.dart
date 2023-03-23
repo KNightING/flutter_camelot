@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 enum CamelotLogLevel {
-  debug('D', Colors.blue),
-  info('I', Colors.green),
-  warn('W', Colors.orange),
-  error('E', Colors.red);
+  debug('Ｄ', Colors.blue),
+  info('Ｉ', Colors.green),
+  warn('Ｗ', Colors.orange),
+  error('Ｅ', Colors.red);
 
   const CamelotLogLevel(this.shortName, this.color);
 

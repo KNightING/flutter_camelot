@@ -36,7 +36,7 @@ class CamelotLog {
 
   static void error(Object error, {StackTrace? stackTrace}) => write(
       CamelotLogLevel.error,
-      '$error\n\nWhen the exception was thrown, this was the stack:\n$stackTrace');
+      '$error${stackTrace == null ? '' : '\n\nWhen the exception was thrown, this was the stack:\n$stackTrace'}');
 
   static void stackTrace(StackTrace stackTrace) =>
       write(CamelotLogLevel.error, '\n$stackTrace');
@@ -71,6 +71,6 @@ class CamelotLogData {
 
   @override
   String toString() {
-    return '${DateTime.fromMillisecondsSinceEpoch(timestamp)}  [ ${level.shortName} ]  $message';
+    return '${DateTime.fromMillisecondsSinceEpoch(timestamp)}  [${level.shortName}]  $message';
   }
 }

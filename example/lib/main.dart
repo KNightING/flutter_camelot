@@ -7,7 +7,6 @@ import 'package:flutter_camelot/example/flutter_camelot.dart';
 import 'package:flutter_camelot/log/camelot_log.dart';
 import 'package:flutter_camelot/util/device_util.dart';
 import 'package:flutter_camelot/widget.dart';
-import 'package:flutter_camelot/widget/camelot.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
@@ -79,24 +78,37 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CamelotBox(
-                  onTap: () {},
+                CamelotContainer(
+                  onTap: () {
+                    CLog.debug('message');
+                    CLog.info('message');
+                    CLog.warn('message');
+                    CLog.error('message');
+                  },
                   color: Colors.redAccent,
+                  splashColor: Colors.deepOrange,
+                  gradient: const LinearGradient(
+                    colors: [
+                      Colors.redAccent,
+                      Colors.purple,
+                    ],
+                  ),
+                  margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(20),
                   boxShadow: const [
                     BoxShadow(
-                      offset: Offset(0, 0),
+                      offset: Offset(-3, -3),
                       color: Colors.tealAccent,
                       blurRadius: 6,
                     ),
                     BoxShadow(
-                      offset: Offset(5, 5),
+                      offset: Offset(3, 3),
                       color: Colors.blueAccent,
                       blurRadius: 6,
                     ),
                   ],
-                  borderRadius: BorderRadius.circular(10),
-                  child: Text('test'),
+                  borderRadius: BorderRadius.circular(15),
+                  child: Text('Camelot Container'),
                 ),
                 OutlinedButton(
                     onPressed: () {},
