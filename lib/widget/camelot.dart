@@ -46,6 +46,10 @@ class CamelotState extends State<Camelot> {
     super.dispose();
   }
 
+  void scapegoatFocus() {
+    _scapegoatFocusNode.requestFocus();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -53,10 +57,10 @@ class CamelotState extends State<Camelot> {
         behavior: HitTestBehavior.opaque,
         onTap: () {
           if (widget.whenTapClearFocus || Platform.isWindows) {
-            final currentFocus = FocusScope.of(context).focusedChild;
-            if (currentFocus != null && currentFocus.hasPrimaryFocus) {
+            final currentFocus = FocusScope.of(context);
+            if (currentFocus.hasPrimaryFocus) {
               currentFocus.unfocus();
-              _scapegoatFocusNode.requestFocus();
+              scapegoatFocus();
             }
           }
         },
