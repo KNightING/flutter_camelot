@@ -263,6 +263,8 @@ class _CamelotTextFieldState extends State<CamelotTextField> {
       magnifierConfiguration: widget.magnifierConfiguration,
     );
 
+    return textField;
+
     // 目前暫時不確定是不是只有windows平台會有focus在navigation會有切頁殘留導致一直跳出鍵盤的問題
     if (Platform.isWindows) {
       return Stack(

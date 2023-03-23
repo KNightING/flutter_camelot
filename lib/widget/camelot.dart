@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_camelot/widget/camelot_log_panel.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:io';
 
-class Camelot extends ConsumerStatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_camelot/extension/kotlin_like_extension.dart';
+import 'package:flutter_camelot/widget/camelot_log_panel.dart';
+
+class Camelot extends StatefulWidget {
   const Camelot({
     Key? key,
     required this.child,
@@ -20,14 +22,28 @@ class Camelot extends ConsumerStatefulWidget {
   final bool whenTapClearFocus;
 
   @override
-  ConsumerState createState() => CamelotState();
+  State createState() => CamelotState();
 }
 
-class CamelotState extends ConsumerState<Camelot> {
+class CamelotState extends State<Camelot> {
   static CamelotState? of(BuildContext context) {
     final CamelotState? result =
         context.findAncestorStateOfType<CamelotState>();
     return result;
+  }
+
+  late FocusNode _scapegoatFocusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _scapegoatFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _scapegoatFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -36,12 +52,29 @@ class CamelotState extends ConsumerState<Camelot> {
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          if (widget.whenTapClearFocus) {
-            FocusScope.of(context).unfocus();
+          if (widget.whenTapClearFocus || Platform.isWindows) {
+            final currentFocus = FocusScope.of(context).focusedChild;
+            if (currentFocus != null && currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+              _scapegoatFocusNode.requestFocus();
+            }
           }
         },
         child: Stack(
           children: [
+            SizedBox(
+              width: 0.01,
+              height: 0.01,
+              child: FilledButton(
+                focusNode: _scapegoatFocusNode,
+                style: const ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+                ),
+                autofocus: true,
+                onPressed: () {},
+                child: null,
+              ),
+            ),
             widget.child,
             CamelotLogPanel(
               enable: widget.enableLogPanel,

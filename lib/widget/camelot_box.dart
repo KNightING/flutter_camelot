@@ -108,6 +108,7 @@ class CamelotBox extends StatelessWidget {
       onTapUp: onTapUp,
       onTapDown: onTapDown,
       onTapCancel: onTapCancel,
+      onHighlightChanged: onHighlightChanged,
       mouseCursor: mouseCursor,
       focusColor: focusColor,
       highlightColor: highlightColor,

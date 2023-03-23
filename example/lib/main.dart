@@ -80,6 +80,7 @@ class _MyAppState extends State<MyApp> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CamelotBox(
+                  onTap: () {},
                   color: Colors.redAccent,
                   padding: const EdgeInsets.all(20),
                   boxShadow: const [
@@ -134,6 +135,10 @@ class _MyAppState extends State<MyApp> {
                   },
                 ),
                 Text('Running on: $_platformVersion\n'),
+                SizedBox(
+                  width: 100,
+                  child: TextField(),
+                ),
               ],
             ),
           ),

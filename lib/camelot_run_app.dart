@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_camelot/architecture/camelot_service.dart';
 import 'package:flutter_camelot/log/camelot_log.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'architecture/camelot_service_config.dart';
 
@@ -18,6 +19,7 @@ void camelotRunApp({
   Function()? initAsyncApp,
   required Widget app,
   CamelotServiceConfig? config,
+  bool inRiverPodProviderScope = true,
 }) {
   // 攔截 Flutter同步異常
   FlutterError.onError = (details) {
@@ -45,7 +47,11 @@ void camelotRunApp({
         CamelotService().config = config;
       }
       _runWithCamelotApp = true;
-      return runApp(app);
+      if (inRiverPodProviderScope) {
+        return runApp(ProviderScope(child: app));
+      } else {
+        return runApp(app);
+      }
     },
     handleUncaughtError: config?.handleUncaughtError,
   );
