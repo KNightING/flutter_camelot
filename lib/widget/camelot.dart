@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_camelot/extension/kotlin_like_extension.dart';
 import 'package:flutter_camelot/widget/camelot_log_panel.dart';
 
 class Camelot extends StatefulWidget {
@@ -32,53 +31,21 @@ class CamelotState extends State<Camelot> {
     return result;
   }
 
-  late FocusNode _scapegoatFocusNode;
-
-  @override
-  void initState() {
-    super.initState();
-    _scapegoatFocusNode = FocusNode();
-  }
-
-  @override
-  void dispose() {
-    _scapegoatFocusNode.dispose();
-    super.dispose();
-  }
-
-  void scapegoatFocus() {
-    _scapegoatFocusNode.requestFocus();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Material(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          if (widget.whenTapClearFocus || Platform.isWindows) {
+          if (widget.whenTapClearFocus) {
             final currentFocus = FocusScope.of(context);
             if (currentFocus.hasPrimaryFocus) {
               currentFocus.unfocus();
-              scapegoatFocus();
             }
           }
         },
         child: Stack(
           children: [
-            SizedBox(
-              width: 0.01,
-              height: 0.01,
-              child: FilledButton(
-                focusNode: _scapegoatFocusNode,
-                style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-                ),
-                autofocus: true,
-                onPressed: () {},
-                child: null,
-              ),
-            ),
             widget.child,
             CamelotLogPanel(
               enable: widget.enableLogPanel,

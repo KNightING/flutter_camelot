@@ -172,13 +172,13 @@ class CamelotTextField extends StatefulWidget {
 
 class _CamelotTextFieldState extends State<CamelotTextField> {
   late FocusNode _focusNode;
-  late FocusNode _buttonFocusNode;
+  late FocusNode _scapegoatFocusNode;
   bool readOnly = true;
 
   @override
   void initState() {
     super.initState();
-    _buttonFocusNode = FocusNode();
+    _scapegoatFocusNode = FocusNode();
 
     _focusNode = widget.focusNode ?? FocusNode();
     _focusNode.addListener(() {
@@ -189,8 +189,7 @@ class _CamelotTextFieldState extends State<CamelotTextField> {
         } else {
           // SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
           // WindowsOSK.close();
-          // context.camelot?.scapegoatFocus();
-          // _buttonFocusNode.requestFocus();
+          _scapegoatFocusNode.requestFocus();
         }
       }
     });
@@ -198,7 +197,7 @@ class _CamelotTextFieldState extends State<CamelotTextField> {
 
   @override
   void dispose() {
-    _buttonFocusNode.dispose();
+    _scapegoatFocusNode.dispose();
     if (widget.focusNode == null) _focusNode.dispose();
     super.dispose();
   }
@@ -235,7 +234,7 @@ class _CamelotTextFieldState extends State<CamelotTextField> {
       maxLengthEnforcement: widget.maxLengthEnforcement,
       onChanged: widget.onChanged,
       onEditingComplete: () {
-        _buttonFocusNode.requestFocus();
+        _scapegoatFocusNode.requestFocus();
         widget.onEditingComplete?.call();
       },
       onSubmitted: widget.onSubmitted,
@@ -265,8 +264,6 @@ class _CamelotTextFieldState extends State<CamelotTextField> {
       magnifierConfiguration: widget.magnifierConfiguration,
     );
 
-    return textField;
-
     // 目前暫時不確定是不是只有windows平台會有focus在navigation會有切頁殘留導致一直跳出鍵盤的問題
     if (Platform.isWindows) {
       return Stack(
@@ -275,7 +272,7 @@ class _CamelotTextFieldState extends State<CamelotTextField> {
             width: 0.01,
             height: 0.01,
             child: FilledButton(
-              focusNode: _buttonFocusNode,
+              focusNode: _scapegoatFocusNode,
               style: const ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(Colors.transparent),
               ),
@@ -290,15 +287,5 @@ class _CamelotTextFieldState extends State<CamelotTextField> {
     } else {
       return textField;
     }
-  }
-}
-
-class CamelotFocusNode extends FocusNode {
-  CamelotFocusNode(BuildContext context) {
-    addListener(() {
-      if (!hasPrimaryFocus) {
-        context.camelot?.scapegoatFocus();
-      }
-    });
   }
 }
