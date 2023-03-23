@@ -20,6 +20,7 @@ void camelotRunApp({
   required Widget app,
   CamelotServiceConfig? config,
   bool inRiverPodProviderScope = true,
+  bool exitOnError = true,
 }) {
   // 攔截 Flutter同步異常
   FlutterError.onError = (details) {
@@ -29,7 +30,7 @@ void camelotRunApp({
     final stack = details.stack ?? StackTrace.current;
     CLog.error(error, stackTrace: stack);
     config?.handleUncaughtError?.call(true, error, stack);
-    if (kReleaseMode) exit(1);
+    if (exitOnError) exit(1);
   };
 
   // 攔截 異步異常 同runZoned但是無法寫到IDE的console

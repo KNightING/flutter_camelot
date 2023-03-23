@@ -208,16 +208,28 @@ class CamelotContainer extends StatelessWidget {
         color != Colors.transparent ||
         boxShadow != null ||
         gradient != null) {
+      final borderIsUniform = border?.isUniform ?? false;
+
       _child = Ink(
         decoration: BoxDecoration(
           color: gradient != null ? null : color,
           gradient: gradient,
           borderRadius: borderRadius,
-          border: showBorder ? border : null,
+          border: (showBorder && borderIsUniform) ? border : null,
           boxShadow: boxShadow,
         ),
         child: _child,
       );
+
+      if (!borderIsUniform) {
+        _child = ClipRRect(
+          borderRadius: borderRadius,
+          child: DecoratedBox(
+            decoration: BoxDecoration(border: border),
+            child: _child,
+          ),
+        );
+      }
 
       var leftPadding = 0.0;
       var topPadding = 0.0;

@@ -93,6 +93,7 @@ class _MyAppState extends State<MyApp> {
                       Colors.purple,
                     ],
                   ),
+                  border: Border.all(color: Colors.white),
                   margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(20),
                   boxShadow: const [
@@ -110,46 +111,24 @@ class _MyAppState extends State<MyApp> {
                   borderRadius: BorderRadius.circular(15),
                   child: Text('Camelot Container'),
                 ),
-                OutlinedButton(
-                    onPressed: () {},
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Text('test'),
-                    )),
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  alignment: Alignment.center,
+                CamelotIconButton(
+                  Icons.edit,
+                  color: Colors.red,
+                  size: 50,
+                  splashColor: Colors.teal,
                   iconSize: 20,
-                  splashRadius: 35,
-                  constraints: BoxConstraints.tight(
-                    const Size(35, 35),
-                  ),
-                  icon: const Icon(
-                    Icons.edit,
-                  ),
-                  onPressed: () async {
-                    // CLog.debug('debug');
-                    // CLog.info('info');
-                    // CLog.warn('warn');
-                    // CLog.error('error');
-                    // try {
-                    //   throw FlutterError('test exception');
-                    // } on Error catch (e, s) {
-                    //   CLog.errorAndStackTrace(e, s);
-                    // }
-                    print('test');
-                    throw Exception('test');
-                    throw FlutterError('message');
-                  },
+                  onPressed: () {},
                 ),
                 Text('Running on: $_platformVersion\n'),
                 SizedBox(
                   width: 100,
-                  child: TextField(),
+                  child: CamelotTextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        gapPadding: 2,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
