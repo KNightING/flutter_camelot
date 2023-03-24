@@ -146,23 +146,26 @@ class CamelotContainer extends StatelessWidget {
     var bottomPadding = 0.0;
 
     boxShadow?.forEach((shadow) {
-      final xPadding = shadow.offset.dx.abs() + shadow.blurRadius * 1.5;
-      final yPadding = shadow.offset.dy.abs() + shadow.blurRadius * 1.5;
+      final shadowPadding = shadow.blurRadius * 1.5;
+      final xPadding = shadow.offset.dx.abs() + shadowPadding;
+      final yPadding = shadow.offset.dy.abs() + shadowPadding;
 
-      if (shadow.offset.dx == 0 && leftPadding == 0) {
-        leftPadding = xPadding;
+      if (leftPadding == 0) {
+        leftPadding = shadowPadding - shadow.offset.dx;
+        if (leftPadding < 0) leftPadding = 0;
       }
 
-      if (shadow.offset.dx == 0 && rightPadding == 0) {
-        rightPadding = xPadding;
+      if (rightPadding == 0) {
+        rightPadding = shadowPadding + shadow.offset.dx;
       }
 
-      if (shadow.offset.dy == 0 && topPadding == 0) {
-        topPadding = yPadding;
+      if (topPadding == 0) {
+        topPadding = shadowPadding - shadow.offset.dy;
+        if (topPadding < 0) topPadding = 0;
       }
 
-      if (shadow.offset.dy == 0 && bottomPadding == 0) {
-        bottomPadding = yPadding;
+      if (bottomPadding == 0) {
+        bottomPadding = shadowPadding + shadow.offset.dy;
       }
 
       if (shadow.offset.dx < 0 && xPadding > leftPadding) {
