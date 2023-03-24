@@ -83,6 +83,55 @@ class _MyAppState extends State<MyApp> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Container(
+                      width: 300,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                      ),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                        ),
+                        child: Text('123123'),
+                      ),
+                    ),
+                    const CamelotContainer(
+                      width: 300,
+                      color: Colors.green,
+                      alignment: Alignment.center,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                        ),
+                        child: Text('123123'),
+                      ),
+                    ),
+                    CamelotLimitBox(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                        ),
+                        child: Text('123123'),
+                      ),
+                      upperLimitWidth: double.infinity,
+                      widthMode: CamelotLimitBoxSizeMode.wrapContent,
+                      lowerLimitWidth: 0,
+                      lowerLimitHeight: 0,
+                      heightMode: CamelotLimitBoxSizeMode.wrapContent,
+                      upperLimitHeight: double.infinity,
+                    ),
+                    CamelotLimitBox.width(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                        ),
+                        child: Text('123123'),
+                      ),
+                      lowerLimitWidth: 100,
+                      itemWidth: 20.vw,
+                      upperLimitWidth: 250,
+                    ),
                     CamelotContainer(
                       onTap: () {
                         CLog.debug('message');

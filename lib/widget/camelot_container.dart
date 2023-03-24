@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_camelot/extension/context_extension.dart';
+import 'package:flutter_camelot/extension/kotlin_like_extension.dart';
+import 'package:flutter_camelot/log/camelot_log.dart';
 
 import 'camelot_limit_box.dart';
 
@@ -7,51 +9,52 @@ typedef CContainer = CamelotContainer;
 
 class CamelotContainer extends StatelessWidget {
   /// 整合 [Padding], [InkWell], [Ink], [Material], [CamelotLimitBox]
-  const CamelotContainer({
-    Key? key,
-    required this.child,
-    this.useInkWell = true,
-    this.showBorder = true,
-    this.color = Colors.transparent,
-    this.gradient,
-    this.backgroundColor = Colors.transparent,
-    this.borderRadius = BorderRadius.zero,
-    this.side = BorderSide.none,
-    this.border,
-    this.onTap,
-    this.padding = EdgeInsets.zero,
-    this.margin = EdgeInsets.zero,
-    this.mouseCursor,
-    this.focusColor,
-    this.hoverColor,
-    this.highlightColor,
-    this.overlayColor,
-    this.splashColor,
-    this.splashFactory,
-    this.elevation = 0.0,
-    this.shadowColor,
-    this.boxShadow,
-    this.onDoubleTap,
-    this.onLongPress,
-    this.onTapDown,
-    this.onTapUp,
-    this.onTapCancel,
-    this.onHighlightChanged,
-    this.onHover,
-    CamelotLimitBoxSizeMode? widthMode,
-    this.lowerLimitWidth = 0,
-    this.width = double.infinity,
-    this.upperLimitWidth = double.infinity,
-    CamelotLimitBoxSizeMode? heightMode,
-    this.lowerLimitHeight = 0,
-    this.height = double.infinity,
-    this.upperLimitHeight = double.infinity,
-  })  : widthMode = widthMode ??
-            (width == double.infinity && lowerLimitWidth == 0
+  const CamelotContainer(
+      {Key? key,
+      required this.child,
+      this.useInkWell = true,
+      this.showBorder = true,
+      this.color = Colors.transparent,
+      this.gradient,
+      this.backgroundColor = Colors.transparent,
+      this.borderRadius = BorderRadius.zero,
+      this.side = BorderSide.none,
+      this.border,
+      this.onTap,
+      this.padding = EdgeInsets.zero,
+      this.margin = EdgeInsets.zero,
+      this.mouseCursor,
+      this.focusColor,
+      this.hoverColor,
+      this.highlightColor,
+      this.overlayColor,
+      this.splashColor,
+      this.splashFactory,
+      this.elevation = 0.0,
+      this.shadowColor,
+      this.boxShadow,
+      this.onDoubleTap,
+      this.onLongPress,
+      this.onTapDown,
+      this.onTapUp,
+      this.onTapCancel,
+      this.onHighlightChanged,
+      this.onHover,
+      CamelotLimitBoxSizeMode? widthMode,
+      this.lowerLimitWidth = 0,
+      this.width,
+      this.upperLimitWidth = double.infinity,
+      CamelotLimitBoxSizeMode? heightMode,
+      this.lowerLimitHeight = 0,
+      this.height,
+      this.upperLimitHeight = double.infinity,
+      this.alignment})
+      : widthMode = widthMode ??
+            (width == null
                 ? CamelotLimitBoxSizeMode.wrapContent
                 : CamelotLimitBoxSizeMode.limit),
         heightMode = heightMode ??
-            (height == double.infinity && lowerLimitHeight == 0
+            (height == null
                 ? CamelotLimitBoxSizeMode.wrapContent
                 : CamelotLimitBoxSizeMode.limit),
         super(key: key);
@@ -134,6 +137,8 @@ class CamelotContainer extends StatelessWidget {
 
   final double upperLimitHeight;
 
+  final Alignment? alignment;
+
   EdgeInsets? getBoxShadowPadding() {
     var leftPadding = 0.0;
     var topPadding = 0.0;
@@ -196,19 +201,24 @@ class CamelotContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     var _child = child;
 
-    if (width != null || height != null) {
-      _child = CamelotLimitBox(
-        widthMode: widthMode,
-        lowerLimitWidth: lowerLimitWidth,
-        itemWidth: width,
-        upperLimitWidth: upperLimitWidth,
-        heightMode: heightMode,
-        lowerLimitHeight: lowerLimitHeight,
-        itemHeight: height,
-        upperLimitHeight: upperLimitHeight,
+    alignment?.let((alignment) {
+      _child = Align(
+        alignment: alignment,
         child: _child,
       );
-    }
+    });
+
+    _child = CamelotLimitBox(
+      widthMode: widthMode,
+      lowerLimitWidth: lowerLimitWidth,
+      itemWidth: width,
+      upperLimitWidth: upperLimitWidth,
+      heightMode: heightMode,
+      lowerLimitHeight: lowerLimitHeight,
+      itemHeight: height,
+      upperLimitHeight: upperLimitHeight,
+      child: _child,
+    );
 
     if (padding != EdgeInsets.zero) {
       _child = Padding(
