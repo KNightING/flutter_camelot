@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_camelot/camelot_run_app.dart';
 import 'package:flutter_camelot/example/flutter_camelot.dart';
+import 'package:flutter_camelot/extension.dart';
 import 'package:flutter_camelot/log/camelot_log.dart';
 import 'package:flutter_camelot/util/device_util.dart';
 import 'package:flutter_camelot/widget.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
   camelotRunApp(
+    exitOnError: false,
     initAsyncApp: () async {
       await CamelotDeviceUtil.landscape();
     },
@@ -69,72 +71,120 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       home: Camelot(
-        logPanelHeight: 300,
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Plugin example app'),
-          ),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CamelotContainer(
-                  onTap: () {
-                    CLog.debug('message');
-                    CLog.info('message');
-                    CLog.warn('message');
-                    CLog.error('message');
-                  },
-                  color: Colors.redAccent,
-                  splashColor: Colors.deepOrange,
-                  gradient: const LinearGradient(
-                    colors: [
-                      Colors.redAccent,
-                      Colors.purple,
-                    ],
-                  ),
-                  border: Border.all(color: Colors.white),
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(20),
-                  boxShadow: const [
-                    BoxShadow(
-                      offset: Offset(-3, -3),
-                      color: Colors.tealAccent,
-                      blurRadius: 6,
-                    ),
-                    BoxShadow(
-                      offset: Offset(3, 3),
-                      color: Colors.blueAccent,
-                      blurRadius: 6,
-                    ),
-                  ],
-                  borderRadius: BorderRadius.circular(15),
-                  child: Text('Camelot Container'),
-                ),
-                CamelotIconButton(
-                  Icons.edit,
-                  color: Colors.red,
-                  size: 50,
-                  splashColor: Colors.teal,
-                  iconSize: 20,
-                  onPressed: () {},
-                ),
-                Text('Running on: $_platformVersion\n'),
-                SizedBox(
-                  width: 100,
-                  child: CamelotTextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        gapPadding: 2,
+          logPanelHeight: 300,
+          builder: (BuildContext context) {
+            final mediaQuery = MediaQuery.of(context);
+
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Plugin example app'),
+              ),
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CamelotContainer(
+                      onTap: () {
+                        CLog.debug('message');
+                        CLog.info('message');
+                        CLog.warn('message');
+                        CLog.error('message');
+                        CLog.debug(
+                            '${WidgetsBinding.instance.window.physicalSize.width}');
+                        CLog.debug(
+                            '${WidgetsBinding.instance.window.physicalSize.height}');
+                        CLog.debug(
+                            '${WidgetsBinding.instance.window.physicalSize.aspectRatio}');
+                        CLog.debug(
+                            '${WidgetsBinding.instance.window.devicePixelRatio}');
+                        CLog.debug(
+                            '${WidgetsBinding.instance.window.viewConfiguration}');
+                        CLog.debug('${20.vh}');
+                        CLog.debug('${25.vw}');
+
+                        CLog.debug(
+                            '${WidgetsBinding.instance.window.viewPadding}');
+                        CLog.debug(
+                            '${WidgetsBinding.instance.window.viewInsets}');
+                        CLog.debug('${mediaQuery.size}');
+                        CLog.debug('${mediaQuery.size.height * 0.2}');
+                        CLog.debug('${mediaQuery.size.width * 0.25}');
+                      },
+                      color: Colors.redAccent,
+                      splashColor: Colors.deepOrange,
+                      gradient: const LinearGradient(
+                        colors: [
+                          Colors.redAccent,
+                          Colors.purple,
+                        ],
+                      ),
+                      border: Border.all(color: Colors.white),
+                      margin: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(20),
+                      boxShadow: const [
+                        BoxShadow(
+                          offset: Offset(-3, -3),
+                          color: Colors.tealAccent,
+                          blurRadius: 6,
+                        ),
+                        BoxShadow(
+                          offset: Offset(3, 3),
+                          color: Colors.blueAccent,
+                          blurRadius: 6,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(15),
+                      lowerLimitHeight: 120,
+                      height: 25.vh,
+                      upperLimitHeight: 150,
+                      lowerLimitWidth: 170,
+                      width: 30.vw,
+                      upperLimitWidth: 300,
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Running on: $_platformVersion',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                '''
+Camelot Container
+W:${constraints.maxWidth.toStringAsFixed(2)}
+H:${constraints.maxHeight.toStringAsFixed(2)}
+                                ''',
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     ),
-                  ),
+                    CamelotIconButton(
+                      Icons.edit,
+                      color: Colors.red,
+                      size: 50,
+                      splashColor: Colors.teal,
+                      iconSize: 20,
+                      onPressed: () {},
+                    ),
+                    SizedBox(
+                      width: 100,
+                      child: CamelotTextField(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            gapPadding: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
+              ),
+            );
+          }),
     );
   }
 }

@@ -46,18 +46,7 @@ class CamelotContainer extends StatelessWidget {
     this.lowerLimitHeight = 0,
     this.height = double.infinity,
     this.upperLimitHeight = double.infinity,
-    // CamelotLimitBoxSizeMode? widthMode,
-    // double? lowerLimitWidth,
-    // this.width = 0,
-    // double? upperLimitWidth,
-    // CamelotLimitBoxSizeMode? heightMode,
-    // double? lowerLimitHeight,
-    // this.height = 0,
-    // double? upperLimitHeight,
-  })  :
-        // upperLimitWidth = upperLimitWidth ?? width,
-        // upperLimitHeight = upperLimitHeight ?? height,
-        widthMode = widthMode ??
+  })  : widthMode = widthMode ??
             (width == double.infinity && lowerLimitWidth == 0
                 ? CamelotLimitBoxSizeMode.wrapContent
                 : CamelotLimitBoxSizeMode.limit),
@@ -145,6 +134,64 @@ class CamelotContainer extends StatelessWidget {
 
   final double upperLimitHeight;
 
+  EdgeInsets? getBoxShadowPadding() {
+    var leftPadding = 0.0;
+    var topPadding = 0.0;
+    var rightPadding = 0.0;
+    var bottomPadding = 0.0;
+
+    boxShadow?.forEach((shadow) {
+      final xPadding = shadow.offset.dx.abs() + shadow.blurRadius * 1.5;
+      final yPadding = shadow.offset.dy.abs() + shadow.blurRadius * 1.5;
+
+      if (shadow.offset.dx == 0 && leftPadding == 0) {
+        leftPadding = xPadding;
+      }
+
+      if (shadow.offset.dx == 0 && rightPadding == 0) {
+        rightPadding = xPadding;
+      }
+
+      if (shadow.offset.dy == 0 && topPadding == 0) {
+        topPadding = yPadding;
+      }
+
+      if (shadow.offset.dy == 0 && bottomPadding == 0) {
+        bottomPadding = yPadding;
+      }
+
+      if (shadow.offset.dx < 0 && xPadding > leftPadding) {
+        leftPadding = xPadding;
+      }
+
+      if (shadow.offset.dx > 0 && xPadding > rightPadding) {
+        rightPadding = xPadding;
+      }
+
+      if (shadow.offset.dy < 0 && yPadding > topPadding) {
+        topPadding = yPadding;
+      }
+
+      if (shadow.offset.dy > 0 && yPadding > bottomPadding) {
+        bottomPadding = yPadding;
+      }
+    });
+
+    if (leftPadding > 0 ||
+        topPadding > 0 ||
+        rightPadding > 0 ||
+        bottomPadding > 0) {
+      return EdgeInsets.only(
+        left: leftPadding,
+        top: topPadding,
+        right: rightPadding,
+        bottom: bottomPadding,
+      );
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var _child = child;
@@ -153,11 +200,11 @@ class CamelotContainer extends StatelessWidget {
       _child = CamelotLimitBox(
         widthMode: widthMode,
         lowerLimitWidth: lowerLimitWidth,
-        width: width,
+        itemWidth: width,
         upperLimitWidth: upperLimitWidth,
         heightMode: heightMode,
         lowerLimitHeight: lowerLimitHeight,
-        height: height,
+        itemHeight: height,
         upperLimitHeight: upperLimitHeight,
         child: _child,
       );
@@ -231,59 +278,10 @@ class CamelotContainer extends StatelessWidget {
         );
       }
 
-      var leftPadding = 0.0;
-      var topPadding = 0.0;
-      var rightPadding = 0.0;
-      var bottomPadding = 0.0;
-
-      boxShadow?.forEach((shadow) {
-        final xPadding = shadow.offset.dx.abs() + shadow.blurRadius * 1.5;
-        final yPadding = shadow.offset.dy.abs() + shadow.blurRadius * 1.5;
-
-        if (shadow.offset.dx == 0 && leftPadding == 0) {
-          leftPadding = xPadding;
-        }
-
-        if (shadow.offset.dx == 0 && rightPadding == 0) {
-          rightPadding = xPadding;
-        }
-
-        if (shadow.offset.dy == 0 && topPadding == 0) {
-          topPadding = yPadding;
-        }
-
-        if (shadow.offset.dy == 0 && bottomPadding == 0) {
-          bottomPadding = yPadding;
-        }
-
-        if (shadow.offset.dx < 0 && xPadding > leftPadding) {
-          leftPadding = xPadding;
-        }
-
-        if (shadow.offset.dx > 0 && xPadding > rightPadding) {
-          rightPadding = xPadding;
-        }
-
-        if (shadow.offset.dy < 0 && yPadding > topPadding) {
-          topPadding = yPadding;
-        }
-
-        if (shadow.offset.dy > 0 && yPadding > bottomPadding) {
-          bottomPadding = yPadding;
-        }
-      });
-
-      if (leftPadding > 0 ||
-          topPadding > 0 ||
-          rightPadding > 0 ||
-          bottomPadding > 0) {
+      final boxShadowPadding = getBoxShadowPadding();
+      if (boxShadowPadding != null) {
         _child = Padding(
-          padding: EdgeInsets.only(
-            left: leftPadding,
-            top: topPadding,
-            right: rightPadding,
-            bottom: bottomPadding,
-          ),
+          padding: boxShadowPadding,
           child: _child,
         );
       }

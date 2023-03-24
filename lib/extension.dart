@@ -9,3 +9,4 @@ export 'extension/context_extension.dart';
 export 'extension/kotlin_like_extension.dart';
 export 'extension/dio_extension.dart';
 export 'extension/route_path_extension.dart';
+export 'extension/screen_extension.dart';

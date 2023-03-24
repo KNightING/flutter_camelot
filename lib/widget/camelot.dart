@@ -6,17 +6,35 @@ import 'package:flutter_camelot/widget/camelot_log_panel.dart';
 class Camelot extends StatefulWidget {
   const Camelot({
     Key? key,
-    required this.child,
+    required this.builder,
     this.enableLogPanel = true,
     this.logPanelHeight = 400,
     this.whenTapClearFocus = true,
   }) : super(key: key);
 
+  factory Camelot.child({
+    Key? key,
+    required Widget child,
+    bool enableLogPanel = true,
+    double logPanelHeight = 400,
+    bool whenTapClearFocus = true,
+  }) {
+    return Camelot(
+      key: key,
+      enableLogPanel: enableLogPanel,
+      logPanelHeight: logPanelHeight,
+      whenTapClearFocus: whenTapClearFocus,
+      builder: (BuildContext context) {
+        return child;
+      },
+    );
+  }
+
   final bool enableLogPanel;
 
   final double logPanelHeight;
 
-  final Widget child;
+  final WidgetBuilder builder;
 
   final bool whenTapClearFocus;
 
@@ -46,7 +64,7 @@ class CamelotState extends State<Camelot> {
         },
         child: Stack(
           children: [
-            widget.child,
+            Builder(builder: widget.builder),
             CamelotLogPanel(
               enable: widget.enableLogPanel,
               height: widget.logPanelHeight,
