@@ -8,7 +8,7 @@ import 'camelot_log_provider.dart';
 typedef CLog = CamelotLog;
 
 class CamelotLog {
-  static void write(CamelotLogLevel level, Object object) {
+  static void write(CamelotLogLevel level, Object? object) {
     StackTrace.current;
 
     final data = CamelotLogData(
@@ -24,17 +24,17 @@ class CamelotLog {
     // }
   }
 
-  static void debug(Object object) {
+  static void debug(Object? object) {
     if (kDebugMode) {
       write(CamelotLogLevel.debug, object);
     }
   }
 
-  static void info(Object object) => write(CamelotLogLevel.info, object);
+  static void info(Object? object) => write(CamelotLogLevel.info, object);
 
-  static void warn(Object object) => write(CamelotLogLevel.warn, object);
+  static void warn(Object? object) => write(CamelotLogLevel.warn, object);
 
-  static void error(Object error, {StackTrace? stackTrace}) => write(
+  static void error(Object? error, {StackTrace? stackTrace}) => write(
       CamelotLogLevel.error,
       '$error${stackTrace == null ? '' : '\n\nWhen the exception was thrown, this was the stack:\n$stackTrace'}');
 
@@ -67,7 +67,7 @@ class CamelotLogData {
 
   final CamelotLogLevel level;
 
-  final Object object;
+  final Object? object;
 
   @override
   String toString() {
