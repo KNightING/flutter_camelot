@@ -8,13 +8,13 @@ import 'camelot_log_provider.dart';
 typedef CLog = CamelotLog;
 
 class CamelotLog {
-  static void write(CamelotLogLevel level, String message) {
+  static void write(CamelotLogLevel level, Object object) {
     StackTrace.current;
 
     final data = CamelotLogData(
       timestamp: DateTime.now().millisecondsSinceEpoch,
       level: level,
-      message: message,
+      object: object,
       event: CamelotLogEvent.add,
     );
 
@@ -24,15 +24,15 @@ class CamelotLog {
     // }
   }
 
-  static void debug(String message) {
+  static void debug(Object object) {
     if (kDebugMode) {
-      write(CamelotLogLevel.debug, message);
+      write(CamelotLogLevel.debug, object);
     }
   }
 
-  static void info(String message) => write(CamelotLogLevel.info, message);
+  static void info(Object object) => write(CamelotLogLevel.info, object);
 
-  static void warn(String message) => write(CamelotLogLevel.warn, message);
+  static void warn(Object object) => write(CamelotLogLevel.warn, object);
 
   static void error(Object error, {StackTrace? stackTrace}) => write(
       CamelotLogLevel.error,
@@ -47,7 +47,7 @@ class CamelotLog {
         CamelotLogData(
           timestamp: DateTime.now().millisecondsSinceEpoch,
           level: CamelotLogLevel.info,
-          message: '',
+          object: '',
           event: CamelotLogEvent.clear,
         ),
       );
@@ -58,7 +58,7 @@ class CamelotLogData {
     required this.event,
     required this.timestamp,
     required this.level,
-    required this.message,
+    required this.object,
   });
 
   final CamelotLogEvent event;
@@ -67,10 +67,10 @@ class CamelotLogData {
 
   final CamelotLogLevel level;
 
-  final String message;
+  final Object object;
 
   @override
   String toString() {
-    return '${DateTime.fromMillisecondsSinceEpoch(timestamp)}  [${level.shortName}]  $message';
+    return '${DateTime.fromMillisecondsSinceEpoch(timestamp)}  [${level.shortName}]  $object';
   }
 }
