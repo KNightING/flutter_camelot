@@ -12,9 +12,9 @@ abstract class CamelotDioService {
     required BaseOptions options,
     required CamelotDioOptions camelotDioOptions,
   }) : _dio = CamelotDio(
-          options: options,
-          camelotDioOptions: camelotDioOptions,
-        );
+    options: options,
+    camelotDioOptions: camelotDioOptions,
+  );
 
   final CamelotDio _dio;
 
@@ -24,18 +24,18 @@ abstract class CamelotDioService {
     _dio.interceptors.add(interceptor);
   }
 
-  String getErrorMessageOnException(Exception error) {
+  String getErrorMessageOnException(dynamic error) {
     return 'have some wrong, please try again.';
   }
 
-  Future<CamelotDioBaseResponse<T, E>> _getFailureResponse<T, E>(
-    dynamic error, {
-    required String path,
-    Map<String, dynamic>? reqQueryParameters,
-    Object? reqData,
-    Options? reqOptions,
-    required ResponseParse<E> errorParse,
-  }) async {
+  Future<CamelotDioBaseResponse<T, E>> _getFailureResponse<T, E>(dynamic error,
+      {
+        required String path,
+        Map<String, dynamic>? reqQueryParameters,
+        Object? reqData,
+        Options? reqOptions,
+        required ResponseParse<E> errorParse,
+      }) async {
     if (error is DioError) {
       final errorRequestOptions = error.requestOptions;
       final errorResponse = error.response;
@@ -81,8 +81,7 @@ abstract class CamelotDioService {
     return error is DioError && error.response?.statusCode == 401;
   }
 
-  Future<CamelotDioBaseResponse<R, E>> get<R, E>(
-    String path, {
+  Future<CamelotDioBaseResponse<R, E>> get<R, E>(String path, {
     Map<String, dynamic>? queryParameters,
     Object? data,
     Options? options,
@@ -142,8 +141,7 @@ abstract class CamelotDioService {
     }
   }
 
-  Future<CamelotDioBaseResponse<R, E>> post<R, E>(
-    String path, {
+  Future<CamelotDioBaseResponse<R, E>> post<R, E>(String path, {
     Map<String, dynamic>? queryParameters,
     Object? data,
     Options? options,
@@ -206,8 +204,7 @@ abstract class CamelotDioService {
     }
   }
 
-  Future<CamelotDioBaseResponse<R, E>> patch<R, E>(
-    String path, {
+  Future<CamelotDioBaseResponse<R, E>> patch<R, E>(String path, {
     Map<String, dynamic>? queryParameters,
     Object? data,
     Options? options,
@@ -270,8 +267,7 @@ abstract class CamelotDioService {
     }
   }
 
-  Future<CamelotDioBaseResponse<R, E>> put<R, E>(
-    String path, {
+  Future<CamelotDioBaseResponse<R, E>> put<R, E>(String path, {
     Map<String, dynamic>? queryParameters,
     Object? data,
     Options? options,
@@ -334,8 +330,7 @@ abstract class CamelotDioService {
     }
   }
 
-  Future<CamelotDioBaseResponse<R, E>> delete<R, E>(
-    String path, {
+  Future<CamelotDioBaseResponse<R, E>> delete<R, E>(String path, {
     Map<String, dynamic>? queryParameters,
     Object? data,
     Options? options,
