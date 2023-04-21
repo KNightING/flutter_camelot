@@ -1,5 +1,5 @@
 import 'package:flutter_camelot/extension.dart';
-import 'package:flutter_camelot/isar_extend/version.dart';
+import 'package:flutter_camelot/third_party_extend/isar/version.dart';
 import 'package:isar/isar.dart';
 
 import 'base_isar_migration.dart';

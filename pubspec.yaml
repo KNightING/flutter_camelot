@@ -20,14 +20,14 @@ dependencies:
   freezed_annotation: ^2.2.0
   json_annotation: ^4.8.0
 
-  flutter_riverpod: ^2.3.2
+  flutter_riverpod: ^2.3.5
 
-  dio: ^5.0.2
+  dio: ^5.1.1
 
   isar: *isar_version
   isar_flutter_libs: *isar_version # contains Isar Core
 
-  go_router: ^6.2.0
+  go_router: ^6.5.7
 
 dev_dependencies:
   flutter_test:
@@ -103,3 +103,6 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages
+  assets:
+    - lib/third_party_extend/dio/
+

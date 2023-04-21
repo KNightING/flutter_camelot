@@ -1,3 +1,3 @@
 library flutter_camelot.riverpod_extend;
 
-export 'riverpod_extend/provider/tickerStreamProvider.dart';
+export 'third_party_extend/riverpod/provider/tickerStreamProvider.dart';

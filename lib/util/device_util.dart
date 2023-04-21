@@ -31,4 +31,17 @@ class CamelotDeviceUtil {
       ));
     }
   }
+
+  static double get textScaleFactor {
+    // View.of(context).platformDispatcher.textScaleFactor if a BuildContext is available, otherwise:
+    return WidgetsBinding.instance.platformDispatcher.textScaleFactor;
+  }
+
+  static Brightness get brightness {
+    return WidgetsBinding.instance.platformDispatcher.platformBrightness;
+  }
+
+  static Locale get locale {
+    return WidgetsBinding.instance.platformDispatcher.locale;
+  }
 }

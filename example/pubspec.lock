@@ -53,10 +53,10 @@ packages:
     dependency: transitive
     description:
       name: dio
-      sha256: "2644a9e0965a7aa3deb09cb8ce4081db4450c178f472818c8cd34216a3070d7b"
+      sha256: "0894a098594263fe1caaba3520e3016d8a855caeb010a882273189cca10f11e9"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.2"
+    version: "5.1.1"
   fake_async:
     dependency: transitive
     description:
@@ -84,7 +84,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.27"
+    version: "0.0.34"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -97,10 +97,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_riverpod
-      sha256: b3c3a8a9714b7f88dd2a41e1efbc47f76d620b06ab427c62ae7bc82298cd7dbb
+      sha256: "9692634c2c00d2a1a5e96bbde0b79a7c6f0f266aa266d76cd52841f791949a89"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.2"
+    version: "2.3.5"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -123,10 +123,10 @@ packages:
     dependency: transitive
     description:
       name: go_router
-      sha256: b4bb06205ec607278b6fc23db238278417bca84a3905779cc68d1eb7afae37e2
+      sha256: "99c7fbd4f73da5268046374576af2f6fef970088038d626c5c689a359479af40"
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.0"
+    version: "6.5.7"
   http_parser:
     dependency: transitive
     description:
@@ -235,10 +235,10 @@ packages:
     dependency: transitive
     description:
       name: riverpod
-      sha256: b0fbf7927333c5c318f7e2c22c8b4fd2542ba294de0373e80ecdb34e0dcd8dc4
+      sha256: ec5641067d111681ef825754d1327565c987985c7cb52e09bc867b78248854b2
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.2"
+    version: "2.3.5"
   sky_engine:
     dependency: transitive
     description: flutter
