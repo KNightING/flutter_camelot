@@ -8,6 +8,7 @@ class CamelotDioBaseResponse<R, E> extends Response<R> {
     R? data,
     this.errorData,
     this.errorMessage,
+    this.error
   }) : super(
     data: data,
     requestOptions: response.requestOptions,
@@ -17,7 +18,10 @@ class CamelotDioBaseResponse<R, E> extends Response<R> {
     redirects: response.redirects,
     extra: response.extra,
     headers: response.headers,
-  ) {}
+  ) {
+  }
+
+  final dynamic error;
 
   final E? errorData;
 

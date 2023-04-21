@@ -12,9 +12,9 @@ abstract class CamelotDioService {
     required BaseOptions options,
     required CamelotDioOptions camelotDioOptions,
   }) : _dio = CamelotDio(
-    options: options,
-    camelotDioOptions: camelotDioOptions,
-  );
+          options: options,
+          camelotDioOptions: camelotDioOptions,
+        );
 
   final CamelotDio _dio;
 
@@ -29,13 +29,13 @@ abstract class CamelotDioService {
   }
 
   Future<CamelotDioBaseResponse<T, E>> _getFailureResponse<T, E>(
-      dynamic error, {
-        required String path,
-        Map<String, dynamic>? reqQueryParameters,
-        Object? reqData,
-        Options? reqOptions,
-        required ResponseParse<E> errorParse,
-      }) async {
+    dynamic error, {
+    required String path,
+    Map<String, dynamic>? reqQueryParameters,
+    Object? reqData,
+    Options? reqOptions,
+    required ResponseParse<E> errorParse,
+  }) async {
     if (error is DioError) {
       final errorRequestOptions = error.requestOptions;
       final errorResponse = error.response;
@@ -44,6 +44,7 @@ abstract class CamelotDioService {
         return CamelotDioBaseResponse(
           response: Response(requestOptions: errorRequestOptions),
           errorMessage: getErrorMessageOnException(error),
+          error: error,
         );
       }
 
@@ -52,6 +53,7 @@ abstract class CamelotDioService {
       return CamelotDioBaseResponse(
         response: errorResponse,
         errorData: errorDataFromParse,
+        error: error,
       );
     }
 
@@ -67,19 +69,29 @@ abstract class CamelotDioService {
         requestOptions: requestOptions,
       ),
       errorMessage: getErrorMessageOnException(error),
+      error: error,
     );
   }
 
+  Future<bool> doRefreshToken() async {
+    return true;
+  }
+
+  bool shouldRefreshToken(dynamic error) {
+    return error is DioError && error.response?.statusCode == 401;
+  }
+
   Future<CamelotDioBaseResponse<R, E>> get<R, E>(
-      String path, {
-        Map<String, dynamic>? queryParameters,
-        Object? data,
-        Options? options,
-        CancelToken? cancelToken,
-        ProgressCallback? onReceiveProgress,
-        required ResponseParse<R> parse,
-        required ResponseParse<E> errorParse,
-      }) async {
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Object? data,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+    required ResponseParse<R> parse,
+    required ResponseParse<E> errorParse,
+    bool refreshToken = false,
+  }) async {
     try {
       final response = await _dio.get(
         path,
@@ -92,12 +104,12 @@ abstract class CamelotDioService {
 
       final dataFromParse = await compute(parse, response);
 
-      return CamelotDioBaseResponse(
+      return CamelotDioBaseResponse<R, E>(
         response: response,
         data: dataFromParse,
       );
     } catch (error) {
-      return _getFailureResponse(
+      final failureResponse = _getFailureResponse<R, E>(
         error,
         path: path,
         reqData: data,
@@ -105,20 +117,43 @@ abstract class CamelotDioService {
         reqQueryParameters: queryParameters,
         errorParse: errorParse,
       );
+
+      if (refreshToken && shouldRefreshToken(error)) {
+        final refreshTokenResult = await doRefreshToken();
+
+        if (!refreshTokenResult) {
+          return failureResponse;
+        }
+
+        return get<R, E>(
+          path,
+          queryParameters: queryParameters,
+          data: data,
+          options: options,
+          cancelToken: cancelToken,
+          onReceiveProgress: onReceiveProgress,
+          parse: parse,
+          errorParse: errorParse,
+          refreshToken: false,
+        );
+      }
+
+      return failureResponse;
     }
   }
 
   Future<CamelotDioBaseResponse<R, E>> post<R, E>(
-      String path, {
-        Map<String, dynamic>? queryParameters,
-        Object? data,
-        Options? options,
-        CancelToken? cancelToken,
-        ProgressCallback? onSendProgress,
-        ProgressCallback? onReceiveProgress,
-        required ResponseParse<R> parse,
-        required ResponseParse<E> errorParse,
-      }) async {
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Object? data,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+    required ResponseParse<R> parse,
+    required ResponseParse<E> errorParse,
+    bool refreshToken = false,
+  }) async {
     try {
       final response = await _dio.post(
         path,
@@ -137,7 +172,7 @@ abstract class CamelotDioService {
         data: dataFromParse,
       );
     } catch (error) {
-      return _getFailureResponse(
+      final failureResponse = _getFailureResponse<R, E>(
         error,
         path: path,
         reqData: data,
@@ -145,20 +180,44 @@ abstract class CamelotDioService {
         reqQueryParameters: queryParameters,
         errorParse: errorParse,
       );
+
+      if (refreshToken && shouldRefreshToken(error)) {
+        final refreshTokenResult = await doRefreshToken();
+
+        if (!refreshTokenResult) {
+          return failureResponse;
+        }
+
+        return post<R, E>(
+          path,
+          queryParameters: queryParameters,
+          data: data,
+          options: options,
+          cancelToken: cancelToken,
+          onSendProgress: onSendProgress,
+          onReceiveProgress: onReceiveProgress,
+          parse: parse,
+          errorParse: errorParse,
+          refreshToken: false,
+        );
+      }
+
+      return failureResponse;
     }
   }
 
   Future<CamelotDioBaseResponse<R, E>> patch<R, E>(
-      String path, {
-        Map<String, dynamic>? queryParameters,
-        Object? data,
-        Options? options,
-        CancelToken? cancelToken,
-        ProgressCallback? onSendProgress,
-        ProgressCallback? onReceiveProgress,
-        required ResponseParse<R> parse,
-        required ResponseParse<E> errorParse,
-      }) async {
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Object? data,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+    required ResponseParse<R> parse,
+    required ResponseParse<E> errorParse,
+    bool refreshToken = false,
+  }) async {
     try {
       final response = await _dio.patch(
         path,
@@ -177,7 +236,7 @@ abstract class CamelotDioService {
         data: dataFromParse,
       );
     } catch (error) {
-      return _getFailureResponse(
+      final failureResponse = _getFailureResponse<R, E>(
         error,
         path: path,
         reqData: data,
@@ -185,20 +244,44 @@ abstract class CamelotDioService {
         reqQueryParameters: queryParameters,
         errorParse: errorParse,
       );
+
+      if (refreshToken && shouldRefreshToken(error)) {
+        final refreshTokenResult = await doRefreshToken();
+
+        if (!refreshTokenResult) {
+          return failureResponse;
+        }
+
+        return patch<R, E>(
+          path,
+          queryParameters: queryParameters,
+          data: data,
+          options: options,
+          cancelToken: cancelToken,
+          onSendProgress: onSendProgress,
+          onReceiveProgress: onReceiveProgress,
+          parse: parse,
+          errorParse: errorParse,
+          refreshToken: false,
+        );
+      }
+
+      return failureResponse;
     }
   }
 
   Future<CamelotDioBaseResponse<R, E>> put<R, E>(
-      String path, {
-        Map<String, dynamic>? queryParameters,
-        Object? data,
-        Options? options,
-        CancelToken? cancelToken,
-        ProgressCallback? onSendProgress,
-        ProgressCallback? onReceiveProgress,
-        required ResponseParse<R> parse,
-        required ResponseParse<E> errorParse,
-      }) async {
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Object? data,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+    required ResponseParse<R> parse,
+    required ResponseParse<E> errorParse,
+    bool refreshToken = false,
+  }) async {
     try {
       final response = await _dio.put(
         path,
@@ -217,7 +300,7 @@ abstract class CamelotDioService {
         data: dataFromParse,
       );
     } catch (error) {
-      return _getFailureResponse(
+      final failureResponse = _getFailureResponse<R, E>(
         error,
         path: path,
         reqData: data,
@@ -225,18 +308,42 @@ abstract class CamelotDioService {
         reqQueryParameters: queryParameters,
         errorParse: errorParse,
       );
+
+      if (refreshToken && shouldRefreshToken(error)) {
+        final refreshTokenResult = await doRefreshToken();
+
+        if (!refreshTokenResult) {
+          return failureResponse;
+        }
+
+        return put<R, E>(
+          path,
+          queryParameters: queryParameters,
+          data: data,
+          options: options,
+          cancelToken: cancelToken,
+          onSendProgress: onSendProgress,
+          onReceiveProgress: onReceiveProgress,
+          parse: parse,
+          errorParse: errorParse,
+          refreshToken: false,
+        );
+      }
+
+      return failureResponse;
     }
   }
 
   Future<CamelotDioBaseResponse<R, E>> delete<R, E>(
-      String path, {
-        Map<String, dynamic>? queryParameters,
-        Object? data,
-        Options? options,
-        CancelToken? cancelToken,
-        required ResponseParse<R> parse,
-        required ResponseParse<E> errorParse,
-      }) async {
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Object? data,
+    Options? options,
+    CancelToken? cancelToken,
+    required ResponseParse<R> parse,
+    required ResponseParse<E> errorParse,
+    bool refreshToken = false,
+  }) async {
     try {
       final response = await _dio.delete(
         path,
@@ -253,7 +360,7 @@ abstract class CamelotDioService {
         data: dataFromParse,
       );
     } catch (error) {
-      return _getFailureResponse(
+      final failureResponse = _getFailureResponse<R, E>(
         error,
         path: path,
         reqData: data,
@@ -261,6 +368,27 @@ abstract class CamelotDioService {
         reqQueryParameters: queryParameters,
         errorParse: errorParse,
       );
+
+      if (refreshToken && shouldRefreshToken(error)) {
+        final refreshTokenResult = await doRefreshToken();
+
+        if (!refreshTokenResult) {
+          return failureResponse;
+        }
+
+        return delete<R, E>(
+          path,
+          queryParameters: queryParameters,
+          data: data,
+          options: options,
+          cancelToken: cancelToken,
+          parse: parse,
+          errorParse: errorParse,
+          refreshToken: false,
+        );
+      }
+
+      return failureResponse;
     }
   }
 }
