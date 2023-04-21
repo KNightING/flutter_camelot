@@ -1,6 +1,6 @@
 name: flutter_camelot
 description: flutter camelot
-version: 0.0.34
+version: 0.0.35
 homepage:
 
 environment:
@@ -103,6 +103,3 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages
-  assets:
-    - lib/third_party_extend/dio/
-
