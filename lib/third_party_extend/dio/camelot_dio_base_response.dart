@@ -20,7 +20,7 @@ class CamelotDioBaseResponse<R, E> extends Response<R> {
           headers: response.headers,
         ) {}
 
-  R get requireValue => data!;
+  R get requireData => data!;
 
   final dynamic error;
 
