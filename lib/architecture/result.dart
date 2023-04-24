@@ -7,10 +7,10 @@ typedef OnFailure<T> = Function(Failure<T> result);
 typedef OnLoading<T> = Function(Loading<T> result);
 
 extension OnResultExtension<T> on OnResult<T> {
-  loading(
+  loading({
     String? message,
-  ) {
-    this.call(Loading(''));
+  }) {
+    this.call(Loading(message));
   }
 
   successful({
@@ -67,7 +67,7 @@ abstract class Result<T> {}
 class Loading<T> extends Result<T> {
   Loading(this.message);
 
-  final String message;
+  final String? message;
 }
 
 class Successful<T> extends Result<T> {
