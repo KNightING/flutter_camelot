@@ -30,6 +30,22 @@ extension OnResultExtension<T> on OnResult<T> {
   }
 }
 
+extension OnBoolResultExtension on OnResult<bool> {
+  successfulData({
+    String? message,
+    int? code,
+  }) {
+    this.call(Successful<bool>(true, message: message, code: code));
+  }
+
+  failureData({
+    required String message,
+    int? code,
+  }) {
+    this.call(Failure<bool>(message, data: false, code: code));
+  }
+}
+
 class ResultWork<T> {
   ResultWork(
     this.result, {

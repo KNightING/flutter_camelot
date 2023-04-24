@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_camelot/architecture.dart';
 import 'package:flutter_camelot/camelot_run_app.dart';
 import 'package:flutter_camelot/example/flutter_camelot.dart';
 import 'package:flutter_camelot/extension.dart';
@@ -57,6 +58,16 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _platformVersion = platformVersion;
     });
+  }
+  
+  demoOnIntResult(OnResult<int> onResult){
+    onResult.successful(data: 0);
+    onResult.failure(message: 'failure message');
+  }
+
+  demoOnBoolResult(OnResult<bool> onResult){
+    onResult.successfulData();
+    onResult.failureData(message: 'failure message');
   }
 
   @override

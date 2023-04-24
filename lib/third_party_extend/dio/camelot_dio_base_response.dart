@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 
 typedef CamelotDioResponse<T> = CamelotDioBaseResponse<T, String>;
 
+///
+/// [errorMessage] 錯誤訊息，[CamelotDioService.getErrorMessageOnException]
 class CamelotDioBaseResponse<R, E> extends Response<R> {
   CamelotDioBaseResponse(
       {required Response response,
