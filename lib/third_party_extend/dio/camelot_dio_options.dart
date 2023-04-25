@@ -5,6 +5,7 @@ class CamelotDioOptions {
   CamelotDioOptions({
     // this.interceptors,
     this.writeCamelotLog = kDebugMode,
+    this.writeBodyForLog = true,
     this.httpClientAdapter,
   });
 
@@ -13,4 +14,6 @@ class CamelotDioOptions {
   // final List<Interceptor>? interceptors;
 
   final bool writeCamelotLog;
+
+  final bool writeBodyForLog;
 }

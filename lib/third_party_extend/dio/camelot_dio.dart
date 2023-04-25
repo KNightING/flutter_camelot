@@ -17,7 +17,13 @@ class CamelotDio with DioMixin implements Dio {
     this.options = options;
     camelotDioOptions.also((cOptions) {
       if (cOptions.writeCamelotLog) {
-        interceptors.add(LogInterceptor(logPrint: (s) => CLog.debug(s)));
+        interceptors.add(
+          LogInterceptor(
+            requestBody: cOptions.writeBodyForLog,
+            responseBody: cOptions.writeBodyForLog,
+            logPrint: (s) => CLog.debug(s),
+          ),
+        );
       }
       // cOptions.interceptors?.also((it) => interceptors.addAll(it));
       httpClientAdapter = cOptions.httpClientAdapter ?? HttpClientAdapter();

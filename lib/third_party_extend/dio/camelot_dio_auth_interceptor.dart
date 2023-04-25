@@ -3,9 +3,9 @@ import 'package:flutter_camelot/extension/dio_extension.dart';
 import 'package:flutter_camelot/third_party_extend/dio/camelot_dio.dart';
 
 class CamelotDioAuthBaseInterceptor extends Interceptor {
-  CamelotDioAuthBaseInterceptor(this._dio);
+  CamelotDioAuthBaseInterceptor(this.dio);
 
-  final CamelotDio _dio;
+  final CamelotDio dio;
 
   /// 設定token的邏輯
   Future<bool> setToken(RequestOptions options) async {
@@ -71,16 +71,16 @@ class CamelotDioAuthBaseInterceptor extends Interceptor {
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) async {
     if (await needRefreshToken(err, handler) &&
-        await doRefreshToken(_dio, err, handler)) {
-      retry(_dio, err, handler);
+        await doRefreshToken(dio, err, handler)) {
+      retry(dio, err, handler);
     } else {
       super.onError(err, handler);
     }
   }
 }
 
-class CamelotDioBearerAuthInterceptor extends CamelotDioAuthBaseInterceptor{
-  CamelotDioBearerAuthInterceptor(super._dio);
+class CamelotDioBearerAuthInterceptor extends CamelotDioAuthBaseInterceptor {
+  CamelotDioBearerAuthInterceptor(super.dio);
 
   Future<String?> getToken() async {
     return null;
