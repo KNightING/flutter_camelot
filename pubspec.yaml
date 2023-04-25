@@ -4,7 +4,7 @@ version: 0.0.41
 homepage:
 
 environment:
-  sdk: '>=2.19.4 <3.0.0'
+  sdk: '>=2.19.6 <3.0.0'
   flutter: ">=2.7.7"
 
 isar_version: &isar_version 3.0.5

@@ -23,6 +23,10 @@ extension DioResponseExtension on Response {
     return statusCode == 401;
   }
 
+  bool get isForbidden {
+    return statusCode == 403;
+  }
+
   bool get isMethodNotAllow {
     return statusCode == 405;
   }
@@ -36,11 +40,33 @@ extension DioResponseExtension on Response {
     return code != null && code >= 500 && code < 600;
   }
 
-  bool get isInternalServerError{
+  bool get isInternalServerError {
     return statusCode == 500;
   }
 
-  bool get isBadGateway{
+  bool get isBadGateway {
     return statusCode == 502;
+  }
+}
+
+extension RequestOptionsExtension on RequestOptions {
+  Options toOptions() {
+    return Options(
+      method: method,
+      sendTimeout: sendTimeout,
+      receiveTimeout: receiveTimeout,
+      extra: extra,
+      headers: headers,
+      responseType: responseType,
+      contentType: contentType,
+      validateStatus: validateStatus,
+      receiveDataWhenStatusError: receiveDataWhenStatusError,
+      followRedirects: followRedirects,
+      maxRedirects: maxRedirects,
+      persistentConnection: persistentConnection,
+      requestEncoder: requestEncoder,
+      responseDecoder: responseDecoder,
+      listFormat: listFormat,
+    );
   }
 }
