@@ -105,8 +105,43 @@ abstract class CamelotDioService {
 
   /// [R] 呼叫API成功的格式類型
   /// [E] 呼叫API有response但是錯誤且body有內容時的格式類型
-  /// [parse] 將body轉換成 [R]
-  /// [errorParse] 將body轉換成[E]
+  /// [parse] 將body轉換成 [R]，會在[compute]內轉換，故無法使用方法傳遞，會發生錯誤，如下
+  /// ```dart
+  /// R parse(response){
+  ///   //do parse
+  /// }
+  ///
+  /// E errorParse(response){
+  ///   //do parse
+  /// }
+  ///
+  /// Future<CamelotDioBaseResponse<String, String>> getTest() {
+  ///     return get(
+  ///       '/test',
+  ///       parse: parse,
+  ///       errorParse: : errorParse,
+  ///     );
+  ///   }
+  /// ```
+  ///
+  /// 可以如下
+  ///
+  /// ```dart
+  ///
+  /// ResponseParse<E> errorParse = (response){
+  ///   //do parse
+  /// };
+  ///
+  /// Future<CamelotDioBaseResponse<String, String>> getTest() {
+  ///     return get(
+  ///       '/test',
+  ///       parse: (response) => response.data.toString(),
+  ///       errorParse: : errorParse,
+  ///     );
+  ///   }
+  /// ```
+  ///
+  /// [errorParse] 將body轉換成[E]，用法同[parse]
   ///
   /// ```dart
   /// Future<CamelotDioBaseResponse<String, String>> getTest() {
