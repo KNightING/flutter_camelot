@@ -10,7 +10,7 @@ mixin AutoDisposeAsyncNotifierRefresh<T> on AutoDisposeAsyncNotifier<T> {
     return init();
   }
 
-  void refresh() async {
+  Future<void> refresh() async {
     // can't use `const AsyncValue.loading()` in here because it's type is AsyncValue<Never>.
     // should use `AsyncValue<T>.loading()` or `AsyncLoading<T>()`
     state = AsyncValue<T>.loading();
@@ -29,7 +29,7 @@ mixin AutoDisposeFamilyAsyncNotifierRefresh<T, A>
     return init(arg);
   }
 
-  void refresh() async {
+  Future<void> refresh() async {
     state = AsyncValue<T>.loading();
     state = await AsyncValue.guard<T>(() async {
       return await init(arg);
@@ -45,7 +45,7 @@ mixin AsyncNotifierRefresh<T> on AsyncNotifier<T> {
     return init();
   }
 
-  void refresh() async {
+  Future<void> refresh() async {
     state = AsyncValue<T>.loading();
     state = await AsyncValue.guard<T>(() async {
       return await init();
@@ -61,7 +61,7 @@ mixin FamilyAsyncNotifierRefresh<T, A> on FamilyAsyncNotifier<T, A> {
     return init(arg);
   }
 
-  void refresh() async {
+  Future<void> refresh() async {
     state = AsyncValue<T>.loading();
     state = await AsyncValue.guard<T>(() async {
       return await init(arg);
