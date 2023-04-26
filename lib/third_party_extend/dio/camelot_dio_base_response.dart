@@ -1,17 +1,19 @@
 import 'package:dio/dio.dart';
 
+import 'camelot_dio_service.dart';
+
 typedef CamelotDioResponse<T> = CamelotDioBaseResponse<T, String>;
 
 ///
 /// [errorMessage] 錯誤訊息，[CamelotDioService.getErrorMessageOnException]
 class CamelotDioBaseResponse<R, E> extends Response<R> {
-  CamelotDioBaseResponse(
-      {required Response response,
-      R? data,
-      this.errorData,
-      this.errorMessage,
-      this.error})
-      : super(
+  CamelotDioBaseResponse({
+    required Response response,
+    R? data,
+    // this.errorData,
+    // this.errorMessage,
+    this.error,
+  }) : super(
           data: data,
           requestOptions: response.requestOptions,
           statusCode: response.statusCode,
@@ -24,13 +26,15 @@ class CamelotDioBaseResponse<R, E> extends Response<R> {
 
   R get requireData => data!;
 
-  final dynamic error;
+  final CamelotDioError<E>? error;
 
-  final E? errorData;
+  // final E? errorData;
+  //
+  // E get requireErrorData => errorData!;
+  //
+  // final String? errorMessage;
 
-  E get requireErrorData => errorData!;
+  bool get hasError => error != null;
 
-  final String? errorMessage;
-
-  bool get hasError => errorData != null || errorMessage != null;
+// bool get hasError => errorData != null || errorMessage != null;
 }

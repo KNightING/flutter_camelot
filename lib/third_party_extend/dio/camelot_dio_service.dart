@@ -33,7 +33,8 @@ abstract class CamelotDioService {
 
   /// 如果錯誤response有客製的錯誤訊息格式，請override[E]類型的[toString]
   Future<CamelotDioBaseResponse<T, E>> _getFailureResponse<T, E>(
-    dynamic error, {
+    dynamic error,
+    StackTrace? trace, {
     required String path,
     Map<String, dynamic>? reqQueryParameters,
     Object? reqData,
@@ -47,18 +48,26 @@ abstract class CamelotDioService {
       if (errorResponse == null) {
         return CamelotDioBaseResponse(
           response: Response(requestOptions: errorRequestOptions),
-          errorMessage: getErrorMessageOnException(error),
-          error: error,
+          // errorMessage: getErrorMessageOnException(error),
+          error: CamelotDioError<E>.fromDioError(
+            error,
+            message: getErrorMessageOnException(error),
+          ),
         );
       }
 
-      final errorDataFromParse = await compute(errorParse, errorResponse);
+      final errorData = await compute(errorParse, errorResponse);
+      final errorMessage = errorData.toString();
 
       return CamelotDioBaseResponse(
         response: errorResponse,
-        errorData: errorDataFromParse,
-        error: error,
-        errorMessage: errorDataFromParse.toString(),
+        // errorData: errorData,
+        error: CamelotDioError<E>.fromDioError(
+          error,
+          data: errorData,
+          message: errorMessage,
+        ),
+        // errorMessage: errorMessage,
       );
     }
 
@@ -73,8 +82,13 @@ abstract class CamelotDioService {
       response: Response(
         requestOptions: requestOptions,
       ),
-      errorMessage: getErrorMessageOnException(error),
-      error: error,
+      // errorMessage: getErrorMessageOnException(error),
+      error: CamelotDioError<E>.fromError(
+        error,
+        trace,
+        requestOptions: requestOptions,
+        message: getErrorMessageOnException(error),
+      ),
     );
   }
 
@@ -143,9 +157,10 @@ abstract class CamelotDioService {
         response: response,
         data: dataFromParse,
       );
-    } catch (error) {
+    } catch (error, trace) {
       final failureResponse = _getFailureResponse<R, E>(
         error,
+        trace,
         path: path,
         reqData: data,
         reqOptions: options,
@@ -207,9 +222,10 @@ abstract class CamelotDioService {
         response: response,
         data: dataFromParse,
       );
-    } catch (error) {
+    } catch (error, trace) {
       final failureResponse = _getFailureResponse<R, E>(
         error,
+        trace,
         path: path,
         reqData: data,
         reqOptions: options,
@@ -272,9 +288,10 @@ abstract class CamelotDioService {
         response: response,
         data: dataFromParse,
       );
-    } catch (error) {
+    } catch (error, trace) {
       final failureResponse = _getFailureResponse<R, E>(
         error,
+        trace,
         path: path,
         reqData: data,
         reqOptions: options,
@@ -337,9 +354,10 @@ abstract class CamelotDioService {
         response: response,
         data: dataFromParse,
       );
-    } catch (error) {
+    } catch (error, trace) {
       final failureResponse = _getFailureResponse<R, E>(
         error,
+        trace,
         path: path,
         reqData: data,
         reqOptions: options,
@@ -398,9 +416,10 @@ abstract class CamelotDioService {
         response: response,
         data: dataFromParse,
       );
-    } catch (error) {
+    } catch (error, trace) {
       final failureResponse = _getFailureResponse<R, E>(
         error,
+        trace,
         path: path,
         reqData: data,
         reqOptions: options,
@@ -430,4 +449,40 @@ abstract class CamelotDioService {
       return failureResponse;
     }
   }
+}
+
+class CamelotDioError<E> extends DioError {
+  CamelotDioError.fromDioError(
+    DioError error, {
+    this.data,
+    required super.message,
+  })  : fromDioError = true,
+        super(
+          requestOptions: error.requestOptions,
+          response: error.response,
+          type: error.type,
+          error: error.error,
+          stackTrace: error.stackTrace,
+        );
+
+  CamelotDioError.fromError(
+    dynamic error,
+    StackTrace? trace, {
+    this.data,
+    required super.message,
+    required RequestOptions requestOptions,
+  })  : fromDioError = false,
+        super(
+          requestOptions: requestOptions,
+          error: error,
+          stackTrace: trace,
+        );
+
+  final bool fromDioError;
+
+  final E? data;
+
+  bool get hasData => data != null;
+
+  E get requireData => data!;
 }
