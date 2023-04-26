@@ -28,13 +28,11 @@ class CamelotDioBaseResponse<R, E> extends Response<R> {
 
   final CamelotDioError<E>? error;
 
-  // final E? errorData;
-  //
-  // E get requireErrorData => errorData!;
-  //
-  // final String? errorMessage;
-
   bool get hasError => error != null;
 
-// bool get hasError => errorData != null || errorMessage != null;
+  CamelotDioError<E> get requireError => error!;
+
+  bool get hasErrorData => hasError && requireError.hasData;
+
+  E get requireErrorData => requireError.requireData;
 }
