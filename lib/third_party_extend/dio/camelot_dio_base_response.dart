@@ -10,8 +10,6 @@ class CamelotDioBaseResponse<R, E> extends Response<R> {
   CamelotDioBaseResponse({
     required Response response,
     R? data,
-    // this.errorData,
-    // this.errorMessage,
     this.error,
   }) : super(
           data: data,
@@ -22,7 +20,7 @@ class CamelotDioBaseResponse<R, E> extends Response<R> {
           redirects: response.redirects,
           extra: response.extra,
           headers: response.headers,
-        ) {}
+        );
 
   R get requireData => data!;
 
@@ -35,4 +33,6 @@ class CamelotDioBaseResponse<R, E> extends Response<R> {
   bool get hasErrorData => hasError && requireError.hasData;
 
   E get requireErrorData => requireError.requireData;
+
+  String? get errorMessage => error?.message;
 }
