@@ -8,7 +8,7 @@ abstract class LoadingOnDialogController {
   setMessage(String msg);
 }
 
-Future<T?> loadingOn<T>(
+Future<T> loadingOn<T>(
   LoadingOnWork<T> work, {
   String message = "loading...",
 }) async {
