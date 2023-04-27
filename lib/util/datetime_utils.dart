@@ -1,4 +1,4 @@
-import 'package:flutter_camelot/extension/date_extension.dart';
+import 'package:flutter_camelot/extension.dart';
 
 class DateTimeUtils {
   DateTimeUtils({
