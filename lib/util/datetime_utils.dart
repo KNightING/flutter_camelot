@@ -1,7 +1,7 @@
 import 'package:flutter_camelot/extension/date_extension.dart';
 
-class DateTimeUtil {
-  DateTimeUtil({
+class DateTimeUtils {
+  DateTimeUtils({
     Duration? newTimeZoneOffset,
   }) : newTimeZoneOffset = newTimeZoneOffset ?? DateTime.now().timeZoneOffset;
 

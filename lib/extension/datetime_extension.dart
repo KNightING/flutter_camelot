@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-extension DateExtension on DateTime {
+extension DateTimeExtension on DateTime {
   String f({String format = "yyyy/MM/dd HH:mm:ss"}) {
     return DateFormat(format).format(this);
   }
@@ -19,8 +20,19 @@ extension DateExtension on DateTime {
   }
 
   DateTime toDate() {
-    return copyWith(
-        hour: 0, minute: 0, second: 0, millisecond: 0, microsecond: 0);
+    return DateUtils.dateOnly(this);
+  }
+
+  bool isSameDay(DateTime target) {
+    return DateUtils.isSameDay(this, target);
+  }
+
+  bool isSameMonth(DateTime target) {
+    return DateUtils.isSameMonth(this, target);
+  }
+
+  bool isSameYear(DateTime target) {
+    return year == target.year;
   }
 
   DateTime toNewTimeZoneOffset(Duration newTimeZoneOffset) {
