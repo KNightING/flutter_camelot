@@ -1,5 +1,5 @@
 import 'package:flutter/animation.dart';
-import 'package:flutter_camelot/architecture/camelot_service.dart';
+import 'package:flutter_camelot/architecture.dart';
 import 'package:flutter_camelot/extension/kotlin_like_extension.dart';
 
 typedef LoadingOnWork<T> = Future<T> Function(LoadingOnController controller);
@@ -23,6 +23,12 @@ class LoadingOnEndController {
   VoidCallback? onEnd;
 }
 
+/// 包裝[CamelotServiceConfig.loadingOnStart]與[CamelotServiceConfig.loadingOnEnd]
+///
+/// 如果需要[work]內有用到與[CamelotServiceConfig.loadingOnEnd]衝突的行為，
+/// 請設定在[LoadingOnController.endController]的[LoadingOnEndController.onEnd]，
+/// 例如: 會觸發到關閉LoadingDialog等...
+/// 或也可以在await [loadingOn]之後進行該行為
 Future<T> loadingOn<T>(
   LoadingOnWork<T> work, {
   String message = "loading...",
