@@ -520,4 +520,9 @@ class CamelotDioError<E> extends DioError {
   bool get hasData => data != null;
 
   E get requireData => data!;
+
+  @override
+  String toString() {
+    return super.message ?? super.toString();
+  }
 }
