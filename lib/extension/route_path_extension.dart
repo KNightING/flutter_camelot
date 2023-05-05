@@ -15,4 +15,8 @@ extension RoutePathWithGoRouterExtension on RoutePath {
   void pushReplacement(BuildContext context, {Object? extra}) {
     context.pushReplacement(path, extra: extra);
   }
+
+  void replace(BuildContext context, {Object? extra}) {
+    context.replace(path, extra: extra);
+  }
 }
