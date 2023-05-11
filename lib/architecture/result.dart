@@ -46,38 +46,6 @@ extension OnBoolResultExtension on OnResult<bool> {
   }
 }
 
-class ResultWork<T> {
-  ResultWork(
-    this.result, {
-    this.successful,
-    this.failure,
-    this.loading,
-  }) {
-    if (result is Successful<T>) {
-      successful?.call(result as Successful<T>);
-      return;
-    }
-
-    if (result is Failure<T>) {
-      failure?.call(result as Failure<T>);
-      return;
-    }
-
-    if (result is Loading<T>) {
-      loading?.call(result as Loading<T>);
-      return;
-    }
-  }
-
-  final Result<T> result;
-
-  final OnSuccessful<T>? successful;
-
-  final OnFailure<T>? failure;
-
-  final OnLoading<T>? loading;
-}
-
 abstract class Result<T> {}
 
 class Loading<T> extends Result<T> {
@@ -112,4 +80,27 @@ class Failure<T> extends Result<T> {
   final String message;
 
   final int? code;
+}
+
+extension ResultExtension<T> on Result<T> {
+  void when({
+    OnSuccessful<T>? successful,
+    OnFailure<T>? failure,
+    OnLoading<T>? loading,
+  }) {
+    if (this is Successful<T>) {
+      successful?.call(this as Successful<T>);
+      return;
+    }
+
+    if (this is Failure<T>) {
+      failure?.call(this as Failure<T>);
+      return;
+    }
+
+    if (this is Loading<T>) {
+      loading?.call(this as Loading<T>);
+      return;
+    }
+  }
 }
