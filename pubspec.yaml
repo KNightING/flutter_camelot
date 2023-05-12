@@ -7,7 +7,7 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
   flutter: ">=2.7.7"
 
-isar_version: &isar_version 3.0.5
+isar_version: &isar_version 3.1.0+1
 
 dependencies:
   flutter:
@@ -23,6 +23,8 @@ dependencies:
   flutter_riverpod: ^2.3.6
 
   dio: ^5.1.2
+
+  path_provider: ^2.0.15
 
   isar: *isar_version
   isar_flutter_libs: *isar_version # contains Isar Core

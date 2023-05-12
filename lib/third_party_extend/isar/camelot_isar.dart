@@ -10,7 +10,7 @@ class CamelotIsar {
     required this.schemas,
     required this.migrations,
     this.name = Isar.defaultName,
-    this.directory,
+    required this.directory,
     this.inspector = true,
     this.compactOnLaunch,
     this.relaxedDurability = true,
@@ -25,7 +25,7 @@ class CamelotIsar {
 
   final List<BaseIsarMigration> migrations;
 
-  final String? directory;
+  final String directory;
 
   final int maxSizeMiB;
 
