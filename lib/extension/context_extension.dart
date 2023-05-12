@@ -10,9 +10,12 @@ extension BuildContextExtension on BuildContext {
 
   TextTheme? get textTheme => theme?.textTheme;
 
-  ThemeData get t => theme!;
-
   ColorScheme get cs => colorScheme!;
 
   TextTheme get tt => textTheme!;
+
+  (ThemeData, ColorScheme, TextTheme) get t {
+    final t = theme!;
+    return (t, t.colorScheme, t.textTheme);
+  }
 }

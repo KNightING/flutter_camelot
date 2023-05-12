@@ -59,13 +59,13 @@ class _MyAppState extends State<MyApp> {
       _platformVersion = platformVersion;
     });
   }
-  
-  demoOnIntResult(OnResult<int> onResult){
+
+  demoOnIntResult(OnResult<int> onResult) {
     onResult.successful(data: 0);
     onResult.failure(message: 'failure message');
   }
 
-  demoOnBoolResult(OnResult<bool> onResult){
+  demoOnBoolResult(OnResult<bool> onResult) {
     onResult.successfulData();
     onResult.failureData(message: 'failure message');
   }
@@ -104,22 +104,17 @@ class _MyAppState extends State<MyApp> {
                             CLog.warn('message');
                             CLog.error('message');
                             CLog.debug(
-                                '${WidgetsBinding.instance.window.physicalSize.width}');
+                                '${View.of(context).physicalSize.width}');
                             CLog.debug(
-                                '${WidgetsBinding.instance.window.physicalSize.height}');
+                                '${View.of(context).physicalSize.height}');
                             CLog.debug(
-                                '${WidgetsBinding.instance.window.physicalSize.aspectRatio}');
-                            CLog.debug(
-                                '${WidgetsBinding.instance.window.devicePixelRatio}');
-                            CLog.debug(
-                                '${WidgetsBinding.instance.window.viewConfiguration}');
+                                '${View.of(context).physicalSize.aspectRatio}');
+                            CLog.debug('${View.of(context).devicePixelRatio}');
                             CLog.debug('${20.vh}');
                             CLog.debug('${25.vw}');
 
-                            CLog.debug(
-                                '${WidgetsBinding.instance.window.viewPadding}');
-                            CLog.debug(
-                                '${WidgetsBinding.instance.window.viewInsets}');
+                            CLog.debug('${View.of(context).viewPadding}');
+                            CLog.debug('${View.of(context).viewInsets}');
                             CLog.debug('${mediaQuery.size}');
                             CLog.debug('${mediaQuery.size.height * 0.2}');
                             CLog.debug('${mediaQuery.size.width * 0.25}');

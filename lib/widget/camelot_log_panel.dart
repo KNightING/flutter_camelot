@@ -50,8 +50,7 @@ class _CamelotLogPanelState extends ConsumerState<CamelotLogPanel> {
   Widget build(BuildContext context) {
     final isOpen = ref.watch(camelotLogPanelProvider);
     final logs = ref.watch(camelotLogsProvider);
-    final theme = context.t;
-    final cs = theme.colorScheme;
+    final (theme, cs, tt) = context.t;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (scrollController.hasClients) {
