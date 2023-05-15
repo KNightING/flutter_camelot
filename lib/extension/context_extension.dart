@@ -14,7 +14,7 @@ extension BuildContextExtension on BuildContext {
 
   TextTheme get tt => textTheme!;
 
-  (ThemeData, ColorScheme, TextTheme) get t {
+  (ThemeData t, ColorScheme cs, TextTheme tt) get t {
     final t = theme!;
     return (t, t.colorScheme, t.textTheme);
   }
