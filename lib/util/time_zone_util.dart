@@ -42,4 +42,10 @@ class TimeZoneUtil {
       isUtc: isUtc,
     ).toNewTimeZoneOffset(newTimeZoneOffset);
   }
+
+  DateTime from(
+    DateTime dateTime,
+  ) {
+    return dateTime.toNewTimeZoneOffset(newTimeZoneOffset);
+  }
 }
