@@ -14,7 +14,7 @@ extension DateTimeExtension on DateTime {
     return f(format: "yyyy${separation}MM${separation}dd");
   }
 
-  int secondsSinceEpoch() {
+  int get secondsSinceEpoch {
     return copyWith(millisecond: 0, microsecond: 0).millisecondsSinceEpoch ~/
         1000;
   }
