@@ -1,0 +1,35 @@
+PODS:
+  - flutter_camelot (0.0.1):
+    - FlutterMacOS
+  - FlutterMacOS (1.0.0)
+  - isar_flutter_libs (1.0.0):
+    - FlutterMacOS
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - flutter_camelot (from `Flutter/ephemeral/.symlinks/plugins/flutter_camelot/macos`)
+  - FlutterMacOS (from `Flutter/ephemeral`)
+  - isar_flutter_libs (from `Flutter/ephemeral/.symlinks/plugins/isar_flutter_libs/macos`)
+  - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
+
+EXTERNAL SOURCES:
+  flutter_camelot:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_camelot/macos
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+  isar_flutter_libs:
+    :path: Flutter/ephemeral/.symlinks/plugins/isar_flutter_libs/macos
+  path_provider_foundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
+
+SPEC CHECKSUMS:
+  flutter_camelot: 41f47ce04707ee43f5aae0df120672bdb7222a06
+  FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
+  isar_flutter_libs: 43385c99864c168fadba7c9adeddc5d38838ca6a
+  path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
+
+PODFILE CHECKSUM: 3598b0013492b6ea8ebba7d1fa63720e497af464
+
+COCOAPODS: 1.12.1

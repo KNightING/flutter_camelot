@@ -7,6 +7,7 @@ import 'package:flutter_camelot/camelot_run_app.dart';
 import 'package:flutter_camelot/example/flutter_camelot.dart';
 import 'package:flutter_camelot/extension.dart';
 import 'package:flutter_camelot/log/camelot_log.dart';
+import 'package:flutter_camelot/util.dart';
 import 'package:flutter_camelot/util/device_util.dart';
 import 'package:flutter_camelot/widget.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -70,6 +71,32 @@ class _MyAppState extends State<MyApp> {
     onResult.failureData(message: 'failure message');
   }
 
+  void futureTimeout() async {
+    String? result = await FutureX.withTimeout(
+        timeLimit: const Duration(seconds: 10),
+        computation: () async {
+          await Future.delayed(const Duration(seconds: 5));
+          return 'data1';
+        });
+    CLog.info(result);
+
+    result = await FutureX.withTimeoutOrNull(
+        timeLimit: const Duration(seconds: 10),
+        computation: () async {
+          await Future.delayed(const Duration(seconds: 11));
+          return 'data2';
+        });
+    CLog.info(result);
+
+    result = await FutureX.withTimeout(
+        timeLimit: const Duration(seconds: 10),
+        computation: () async {
+          await Future.delayed(const Duration(seconds: 11));
+          return 'data3';
+        });
+    CLog.info(result);
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = context.t;
@@ -120,6 +147,7 @@ class _MyAppState extends State<MyApp> {
                             CLog.debug('${mediaQuery.size}');
                             CLog.debug('${mediaQuery.size.height * 0.2}');
                             CLog.debug('${mediaQuery.size.width * 0.25}');
+                            futureTimeout();
                           },
                           color: Colors.redAccent,
                           splashColor: Colors.deepOrange,
