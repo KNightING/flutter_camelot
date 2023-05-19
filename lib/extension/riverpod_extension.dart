@@ -9,14 +9,19 @@ extension AsyncValueExtension<T> on AsyncValue<T> {
   bool get isDone => !isRefreshing && (hasValue || hasError);
 }
 
-extension WidgetRefExtension on WidgetRef {
-  Future<AsyncValue<T>?> waitRefreshWithTimeout<T>(
+extension RefExtension on Ref {
+  /// wait data when provider read data first time or refreshing.
+  /// default timeout is 15 seconds
+  ///
+  /// did not refresh when value was not done even [needRefresh] is true.
+  Future<AsyncValue<T>> waitDataWithTimeout<T>(
     ProviderListenable<AsyncValue<T>> provider, {
     Duration? timeLimit,
+    bool needRefresh = false,
   }) {
     final value = read(provider);
 
-    if (value.hasValue || value.hasError) {
+    if (needRefresh && !value.isDone) {
       if (provider is ProviderOrFamily) {
         invalidate(provider as ProviderOrFamily);
       } else if (provider is Refreshable) {
@@ -24,10 +29,22 @@ extension WidgetRefExtension on WidgetRef {
       }
     }
 
-    return FutureX.checkValueWithTimeoutOrNull<AsyncValue<T>>(
-      timeLimit: timeLimit ?? const Duration(seconds: 10),
+    return FutureX.checkValueWithTimeout<AsyncValue<T>>(
+      timeLimit: timeLimit ?? const Duration(seconds: 15),
       readValue: () => read(provider),
       exitCondition: (value) => value != null && value.isDone,
+    );
+  }
+
+  /// this method call [waitDataWithTimeout] and [waitDataWithTimeout.needRefresh] is true
+  Future<AsyncValue<T>> waitRefreshWithTimeout<T>(
+    ProviderListenable<AsyncValue<T>> provider, {
+    Duration? timeLimit,
+  }) {
+    return waitDataWithTimeout(
+      provider,
+      timeLimit: timeLimit,
+      needRefresh: true,
     );
   }
 }
