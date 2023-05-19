@@ -2,6 +2,7 @@ import 'dart:async';
 
 class FutureX {
   /// like kotlin withTimeoutOrNull
+  /// when timeout then return null
   static Future<T?> withTimeoutOrNull<T>({
     required Duration timeLimit,
     required Future<T?> Function() computation,
@@ -14,18 +15,24 @@ class FutureX {
   }
 
   /// like kotlin withTimeout
+  /// Different from [withTimeoutOrNull], which not returns null when the timeout occurs, an [TimeoutException] is thrown instead.
   static Future<T> withTimeout<T>({
     required Duration timeLimit,
     required Future<T> Function() computation,
   }) async {
-    return await Future.microtask(computation).timeout(timeLimit);
+    return await Future.microtask(computation).timeout(
+      timeLimit,
+    );
   }
 
+  /// while read value via [readValue] and call [exitCondition] to check value
+  /// when call [exitCondition] and return true then return the value to [checkValueWithTimeoutOrNull]
+  /// i
   static Future<T?> checkValueWithTimeoutOrNull<T>({
     required Duration timeLimit,
-    required Future<T?> Function() readValue,
+    required FutureOr<T?> Function() readValue,
     required bool Function(T? data) exitCondition,
-    required Duration? rereadDelayed,
+    Duration? rereadDelayed,
   }) async {
     return await withTimeoutOrNull<T>(
         timeLimit: timeLimit,
@@ -34,16 +41,19 @@ class FutureX {
           while (true) {
             value = await readValue();
             if (exitCondition(value)) return value;
-            Future.delayed(rereadDelayed ?? const Duration(milliseconds: 250));
+            await Future.delayed(
+                rereadDelayed ?? const Duration(milliseconds: 250));
           }
         });
   }
 
+  /// see [checkValueWithTimeoutOrNull]
+  ///Different from [checkValueWithTimeoutOrNull], which not returns null when the timeout occurs, an [TimeoutException] is thrown instead.
   static Future<T?> checkValueWithTimeout<T>({
     required Duration timeLimit,
-    required Future<T?> Function() readValue,
+    required FutureOr<T?> Function() readValue,
     required bool Function(T? data) exitCondition,
-    required Duration? rereadDelayed,
+    Duration? rereadDelayed,
   }) async {
     return await withTimeout<T>(
         timeLimit: timeLimit,
@@ -52,7 +62,8 @@ class FutureX {
           while (true) {
             value = await readValue();
             if (value != null && exitCondition(value)) return value;
-            Future.delayed(rereadDelayed ?? const Duration(milliseconds: 250));
+            await Future.delayed(
+                rereadDelayed ?? const Duration(milliseconds: 250));
           }
         });
   }
