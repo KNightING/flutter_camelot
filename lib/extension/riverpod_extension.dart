@@ -21,7 +21,7 @@ extension RefExtension on Ref {
   }) {
     final value = read(provider);
 
-    if (needRefresh && !value.isDone) {
+    if (needRefresh && value.isDone) {
       if (provider is ProviderOrFamily) {
         invalidate(provider as ProviderOrFamily);
       } else if (provider is Refreshable) {
