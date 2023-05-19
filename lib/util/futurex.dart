@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:isolate';
+
+import 'package:flutter/foundation.dart';
 
 class FutureX {
   /// like kotlin withTimeoutOrNull
@@ -8,7 +11,7 @@ class FutureX {
     required Future<T?> Function() computation,
   }) async {
     try {
-      return await Future.microtask(computation).timeout(timeLimit);
+      return await Future(computation).timeout(timeLimit);
     } on TimeoutException {
       return null;
     }
@@ -20,7 +23,7 @@ class FutureX {
     required Duration timeLimit,
     required Future<T> Function() computation,
   }) async {
-    return await Future.microtask(computation).timeout(
+    return await Future(computation).timeout(
       timeLimit,
     );
   }
@@ -49,7 +52,7 @@ class FutureX {
 
   /// see [checkValueWithTimeoutOrNull]
   ///Different from [checkValueWithTimeoutOrNull], which not returns null when the timeout occurs, an [TimeoutException] is thrown instead.
-  static Future<T?> checkValueWithTimeout<T>({
+  static Future<T> checkValueWithTimeout<T>({
     required Duration timeLimit,
     required FutureOr<T?> Function() readValue,
     required bool Function(T? data) exitCondition,
