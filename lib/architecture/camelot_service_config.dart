@@ -2,7 +2,7 @@ import 'package:flutter/animation.dart';
 
 import 'loading_on.dart';
 
-typedef LoadingOnStart = void Function(String message);
+typedef LoadingOnStart = void Function(String? message);
 
 typedef HandleUncaughtError = void Function(
     bool isMain, Object error, StackTrace stack);

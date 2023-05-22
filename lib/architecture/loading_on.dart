@@ -31,7 +31,7 @@ class LoadingOnEndController {
 /// 或也可以在await [loadingOn]之後進行該行為
 Future<T> loadingOn<T>(
   LoadingOnWork<T> work, {
-  String message = "loading...",
+  String? message,
 }) async {
   return await CamelotService().config.let((config) async {
     final endController = LoadingOnEndController();
