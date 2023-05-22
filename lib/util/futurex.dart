@@ -30,7 +30,6 @@ class FutureX {
 
   /// while read value via [readValue] and call [exitCondition] to check value
   /// when call [exitCondition] and return true then return the value to [checkValueWithTimeoutOrNull]
-  /// i
   static Future<T?> checkValueWithTimeoutOrNull<T>({
     required Duration timeLimit,
     required FutureOr<T?> Function() readValue,
@@ -51,7 +50,7 @@ class FutureX {
   }
 
   /// see [checkValueWithTimeoutOrNull]
-  ///Different from [checkValueWithTimeoutOrNull], which not returns null when the timeout occurs, an [TimeoutException] is thrown instead.
+  /// Different from [checkValueWithTimeoutOrNull], which not returns null when the timeout occurs, an [TimeoutException] is thrown instead.
   static Future<T> checkValueWithTimeout<T>({
     required Duration timeLimit,
     required FutureOr<T?> Function() readValue,
