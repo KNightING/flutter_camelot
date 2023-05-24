@@ -53,7 +53,9 @@ extension WidgetRefExtension on WidgetRef {
   /// wait data when provider read data first time or refreshing.
   /// default timeout is 15 seconds
   ///
-  /// did not refresh when value was not done even [needRefresh] is true.
+  /// will not refresh when value was not done even [needRefresh] is true.
+  ///
+  /// don't use auto dispose with family(arg is reference type) provider that will refreshing always.
   Future<AsyncValue<T>> waitDataWithTimeout<T>(
     ProviderListenable<AsyncValue<T>> provider, {
     Duration? timeLimit,
