@@ -63,7 +63,7 @@ class _MyAppState extends State<MyApp> {
 
   demoOnIntResult(OnResult<int> onResult) {
     onResult.successful(data: 0);
-    onResult.failureMessage( 'failure message');
+    onResult.failure( 'failure message');
   }
 
   demoOnBoolResult(OnResult<bool> onResult) {

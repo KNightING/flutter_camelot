@@ -38,21 +38,6 @@ extension OnResultExtension<T> on OnResult<T> {
       stackTrace: stackTrace ?? StackTrace.current,
     ));
   }
-
-  /// seem [failure] and create [MessageError] by [message]
-  failureMessage(
-    String message, {
-    StackTrace? stackTrace,
-    T? data,
-    int? code,
-  }) {
-    this.call(Failure<T>(
-      MessageError(message),
-      data: data,
-      code: code,
-      stackTrace: stackTrace ?? StackTrace.current,
-    ));
-  }
 }
 
 extension OnBoolResultExtension on OnResult<bool> {
@@ -99,20 +84,30 @@ class Successful<T> extends Result<T> {
 
 class Failure<T> extends Result<T> {
   Failure(
-    this.error, {
+    Object error, {
     this.data,
     this.code,
     String? message,
     this.stackTrace,
-  }) : message = message ?? error.toString();
+  }) {
+    _error = error;
+    if (error is String) {
+      _error = MessageError(error);
+    }
+    _message = message ?? _error.toString();
+  }
 
   final T? data;
 
-  final String message;
+  late String _message;
+
+  String get message => _message;
 
   final int? code;
 
-  final Object error;
+  late Object _error;
+
+  Object get error => _error;
 
   final StackTrace? stackTrace;
 
