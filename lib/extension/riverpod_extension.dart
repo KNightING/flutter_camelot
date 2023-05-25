@@ -10,6 +10,83 @@ extension AsyncValueExtension<T> on AsyncValue<T> {
 }
 
 extension RefExtension on Ref {
+  Future<T> _refreshFuture<T>(
+    Refreshable<Future<T>> refreshable, {
+    bool needRefresh = true,
+  }) async {
+    if (needRefresh) {
+      refresh(refreshable);
+    }
+    return await read(refreshable);
+  }
+
+  Future<T> readAsync<T>(
+    ProviderListenable<AsyncValue<T>> provider,
+    Refreshable<Future<T>> refreshable, {
+    bool needRefresh = true,
+  }) async {
+    final value = read(provider);
+    return await _refreshFuture(
+      refreshable,
+      needRefresh: needRefresh && value.isDone,
+    );
+  }
+
+  Future<T> readFuture<T>(
+    FutureProvider<T> provider, {
+    bool needRefresh = false,
+  }) {
+    return readAsync(provider, provider.future, needRefresh: true);
+  }
+
+  Future<T> readStream<T>(
+    StreamProvider<T> provider, {
+    bool needRefresh = false,
+  }) {
+    return readAsync(provider, provider.future, needRefresh: true);
+  }
+
+  Future<T> readAsyncNotifier<T>(
+    AsyncNotifierProvider<AsyncNotifier<T>, T> provider, {
+    bool needRefresh = false,
+  }) {
+    return readAsync(provider, provider.future, needRefresh: true);
+  }
+
+  /// not sure auto dispose provider is readable.
+  Future<T> readAutoDisposeAsyncNotifier<T>(
+    AutoDisposeAsyncNotifierProvider<AutoDisposeAsyncNotifier<T>, T> provider, {
+    bool needRefresh = false,
+  }) {
+    return readAsync(provider, provider.future, needRefresh: true);
+  }
+
+  Future<T> readAsyncNotifierFamily<T, Arg>(
+    AsyncNotifierFamilyProvider<FamilyAsyncNotifier<T, Arg>, T, Arg> provider, {
+    bool needRefresh = false,
+  }) {
+    return readAsync(provider, provider.future, needRefresh: true);
+  }
+
+  /// not sure auto dispose provider is readable.
+  Future<T> readAutoDisposeFamilyAsyncNotifier<T, Arg>(
+    AutoDisposeFamilyAsyncNotifierProvider<
+            AutoDisposeFamilyAsyncNotifier<T, Arg>, T, Arg>
+        provider, {
+    bool needRefresh = false,
+  }) {
+    return readAsync(provider, provider.future, needRefresh: true);
+  }
+
+  /// if just want read and await data may use
+  /// [readAsync],
+  /// [readAsyncNotifier],
+  /// [readAsyncNotifierFamily],
+  /// [readAutoDisposeAsyncNotifier],
+  /// [readAutoDisposeFamilyAsyncNotifier],
+  /// [readFuture],
+  /// [readStream]
+  ///
   /// wait data when provider read data first time or refreshing.
   /// default timeout is 15 seconds
   ///
@@ -50,12 +127,87 @@ extension RefExtension on Ref {
 }
 
 extension WidgetRefExtension on WidgetRef {
+  Future<T> _refreshFuture<T>(
+    Refreshable<Future<T>> refreshable, {
+    bool needRefresh = true,
+  }) async {
+    if (needRefresh) {
+      refresh(refreshable);
+    }
+    return await read(refreshable);
+  }
+
+  Future<T> readAsync<T>(
+    ProviderListenable<AsyncValue<T>> provider,
+    Refreshable<Future<T>> refreshable, {
+    bool needRefresh = true,
+  }) async {
+    final value = read(provider);
+    return await _refreshFuture(
+      refreshable,
+      needRefresh: needRefresh && value.isDone,
+    );
+  }
+
+  Future<T> readFuture<T>(
+    FutureProvider<T> provider, {
+    bool needRefresh = false,
+  }) {
+    return readAsync(provider, provider.future, needRefresh: true);
+  }
+
+  Future<T> readStream<T>(
+    StreamProvider<T> provider, {
+    bool needRefresh = false,
+  }) {
+    return readAsync(provider, provider.future, needRefresh: true);
+  }
+
+  Future<T> readAsyncNotifier<T>(
+    AsyncNotifierProvider<AsyncNotifier<T>, T> provider, {
+    bool needRefresh = false,
+  }) {
+    return readAsync(provider, provider.future, needRefresh: true);
+  }
+
+  /// not sure auto dispose provider is readable.
+  Future<T> readAutoDisposeAsyncNotifier<T>(
+    AutoDisposeAsyncNotifierProvider<AutoDisposeAsyncNotifier<T>, T> provider, {
+    bool needRefresh = false,
+  }) {
+    return readAsync(provider, provider.future, needRefresh: true);
+  }
+
+  Future<T> readAsyncNotifierFamily<T, Arg>(
+    AsyncNotifierFamilyProvider<FamilyAsyncNotifier<T, Arg>, T, Arg> provider, {
+    bool needRefresh = false,
+  }) {
+    return readAsync(provider, provider.future, needRefresh: true);
+  }
+
+  /// not sure auto dispose provider is readable.
+  Future<T> readAutoDisposeFamilyAsyncNotifier<T, Arg>(
+    AutoDisposeFamilyAsyncNotifierProvider<
+            AutoDisposeFamilyAsyncNotifier<T, Arg>, T, Arg>
+        provider, {
+    bool needRefresh = false,
+  }) {
+    return readAsync(provider, provider.future, needRefresh: true);
+  }
+
+  /// if just want read and await data may use
+  /// [readAsync],
+  /// [readAsyncNotifier],
+  /// [readAsyncNotifierFamily],
+  /// [readAutoDisposeAsyncNotifier],
+  /// [readAutoDisposeFamilyAsyncNotifier],
+  /// [readFuture],
+  /// [readStream]
+  ///
   /// wait data when provider read data first time or refreshing.
   /// default timeout is 15 seconds
   ///
-  /// will not refresh when value was not done even [needRefresh] is true.
-  ///
-  /// don't use auto dispose with family(arg is reference type) provider that will refreshing always.
+  /// did not refresh when value was not done even [needRefresh] is true.
   Future<AsyncValue<T>> waitDataWithTimeout<T>(
     ProviderListenable<AsyncValue<T>> provider, {
     Duration? timeLimit,
