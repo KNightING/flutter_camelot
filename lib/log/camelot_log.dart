@@ -9,19 +9,13 @@ typedef CLog = CamelotLog;
 
 class CamelotLog {
   static void write(CamelotLogLevel level, Object? object) {
-    StackTrace.current;
-
     final data = CamelotLogData(
       timestamp: DateTime.now().millisecondsSinceEpoch,
       level: level,
       object: object,
       event: CamelotLogEvent.add,
     );
-
     controller.add(data);
-    // if (kDebugMode && !runWithCamelotApp) {
-    //   print(data.toString());
-    // }
   }
 
   static void debug(Object? object) {

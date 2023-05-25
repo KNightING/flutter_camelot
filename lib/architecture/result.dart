@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 typedef OnResult<T> = Function(Result<T> result);
 
 typedef OnSuccessful<T> = Function(Successful<T> result);
@@ -21,12 +23,35 @@ extension OnResultExtension<T> on OnResult<T> {
     this.call(Successful<T>(data, message: message, code: code));
   }
 
-  failure({
-    required String message,
+  failure(
+    Object error, {
+    String? message,
+    T? data,
+    int? code,
+    StackTrace? stackTrace,
+  }) {
+    this.call(Failure<T>(
+      error,
+      data: data,
+      code: code,
+      message: message,
+      stackTrace: stackTrace ?? StackTrace.current,
+    ));
+  }
+
+  /// seem [failure] and create [MessageError] by [message]
+  failureMessage(
+    String message, {
+    StackTrace? stackTrace,
     T? data,
     int? code,
   }) {
-    this.call(Failure<T>(message, data: data, code: code));
+    this.call(Failure<T>(
+      MessageError(message),
+      data: data,
+      code: code,
+      stackTrace: stackTrace ?? StackTrace.current,
+    ));
   }
 }
 
@@ -66,20 +91,40 @@ class Successful<T> extends Result<T> {
   final String? message;
 
   final int? code;
+
+  bool get hasCode => code != null;
+
+  int get requireCode => code!;
 }
 
 class Failure<T> extends Result<T> {
   Failure(
-    this.message, {
+    this.error, {
     this.data,
     this.code,
-  });
+    String? message,
+    this.stackTrace,
+  }) : message = message ?? error.toString();
 
   final T? data;
 
   final String message;
 
   final int? code;
+
+  final Object error;
+
+  final StackTrace? stackTrace;
+
+  bool get hasCode => code != null;
+
+  int get requireCode => code!;
+
+  bool get hasData => data != null;
+
+  T get requireData => data!;
+
+  Object get requireError => error;
 }
 
 extension ResultExtension<T> on Result<T> {
@@ -103,4 +148,13 @@ extension ResultExtension<T> on Result<T> {
       return;
     }
   }
+}
+
+class MessageError extends Error {
+  MessageError(this.message) : super();
+
+  final String message;
+
+  @override
+  String toString() => message;
 }

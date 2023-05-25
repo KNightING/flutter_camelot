@@ -28,6 +28,12 @@ final camelotLogsProvider = StreamProvider((ref) async* {
         allLogs = [];
         break;
     }
+
+    // 只留100則
+    if (allLogs.length > 100) {
+      allLogs.removeAt(0);
+    }
+
     yield allLogs;
   }
 });
