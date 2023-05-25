@@ -12,7 +12,7 @@ extension AsyncValueExtension<T> on AsyncValue<T> {
 extension RefExtension on Ref {
   Future<T> _refreshFuture<T>(
     Refreshable<Future<T>> refreshable, {
-    bool needRefresh = true,
+    required bool needRefresh,
   }) async {
     if (needRefresh) {
       refresh(refreshable);
@@ -20,62 +20,176 @@ extension RefExtension on Ref {
     return await read(refreshable);
   }
 
-  Future<T> readAsync<T>(
+  /// [needRefresh] is `true` and [read]'s value isDone then will run [Ref.refresh]
+  /// [refreshWhenHasError] is `true` and [read]'s value hasError then will run [Ref.refresh]
+  /// [throwError] is `true` will rethrow error. On the contrary, will return `null` for [Future].
+  Future<T?> readAsync<T>(
     ProviderListenable<AsyncValue<T>> provider,
     Refreshable<Future<T>> refreshable, {
-    bool needRefresh = true,
+    bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) async {
-    final value = read(provider);
-    return await _refreshFuture(
-      refreshable,
-      needRefresh: needRefresh && value.isDone,
+    try {
+      final value = read(provider);
+      return await _refreshFuture(
+        refreshable,
+        needRefresh: (needRefresh && value.isDone) ||
+            (refreshWhenHasError && value.hasError),
+      );
+    } catch (error) {
+      if (throwError) {
+        rethrow;
+      } else {
+        return null;
+      }
+    }
+  }
+
+  /// read AsyncValue for [FutureProvider].
+  /// watch [readAsync]
+  Future<T?> readFuture<T>(
+    FutureProvider<T> provider, {
+    bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
+  }) {
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
     );
   }
 
-  Future<T> readFuture<T>(
-    FutureProvider<T> provider, {
+  /// read AsyncValue for [AutoDisposeFutureProvider].
+  /// watch [readAsync]
+  ///
+  /// not sure auto dispose provider is readable.
+  Future<T?> readAutoDisposeFuture<T>(
+    AutoDisposeFutureProvider<T> provider, {
     bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) {
-    return readAsync(provider, provider.future, needRefresh: true);
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
   }
 
-  Future<T> readStream<T>(
+  /// read AsyncValue for [StreamProvider].
+  /// watch [readAsync]
+  Future<T?> readStream<T>(
     StreamProvider<T> provider, {
     bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) {
-    return readAsync(provider, provider.future, needRefresh: true);
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
   }
 
-  Future<T> readAsyncNotifier<T>(
+  /// read AsyncValue for [AutoDisposeStreamProvider].
+  /// watch [readAsync]
+  ///
+  /// not sure auto dispose provider is readable.
+  Future<T?> readAutoDisposeStream<T>(
+    AutoDisposeStreamProvider<T> provider, {
+    bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
+  }) {
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
+  }
+
+  /// read AsyncValue for [AsyncNotifierProvider].
+  /// watch [readAsync]
+  Future<T?> readAsyncNotifier<T>(
     AsyncNotifierProvider<AsyncNotifier<T>, T> provider, {
     bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) {
-    return readAsync(provider, provider.future, needRefresh: true);
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
   }
 
+  /// read AsyncValue for [AutoDisposeAsyncNotifierProvider].
+  /// watch [readAsync]
+  ///
   /// not sure auto dispose provider is readable.
-  Future<T> readAutoDisposeAsyncNotifier<T>(
+  Future<T?> readAutoDisposeAsyncNotifier<T>(
     AutoDisposeAsyncNotifierProvider<AutoDisposeAsyncNotifier<T>, T> provider, {
     bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) {
-    return readAsync(provider, provider.future, needRefresh: true);
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
   }
 
-  Future<T> readAsyncNotifierFamily<T, Arg>(
+  /// read AsyncValue for [AsyncNotifierFamilyProvider].
+  /// watch [readAsync]
+  Future<T?> readAsyncNotifierFamily<T, Arg>(
     AsyncNotifierFamilyProvider<FamilyAsyncNotifier<T, Arg>, T, Arg> provider, {
     bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) {
-    return readAsync(provider, provider.future, needRefresh: true);
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
   }
 
+  /// read AsyncValue for [AutoDisposeFamilyAsyncNotifierProvider].
+  /// watch [readAsync]
+  ///
   /// not sure auto dispose provider is readable.
-  Future<T> readAutoDisposeFamilyAsyncNotifier<T, Arg>(
+  Future<T?> readAutoDisposeFamilyAsyncNotifier<T, Arg>(
     AutoDisposeFamilyAsyncNotifierProvider<
             AutoDisposeFamilyAsyncNotifier<T, Arg>, T, Arg>
         provider, {
     bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) {
-    return readAsync(provider, provider.future, needRefresh: true);
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
   }
 
   /// if just want read and await data may use
@@ -85,7 +199,9 @@ extension RefExtension on Ref {
   /// [readAutoDisposeAsyncNotifier],
   /// [readAutoDisposeFamilyAsyncNotifier],
   /// [readFuture],
-  /// [readStream]
+  /// [readAutoDisposeFuture],
+  /// [readStream],
+  /// [readAutoDisposeStream]
   ///
   /// wait data when provider read data first time or refreshing.
   /// default timeout is 15 seconds
@@ -129,7 +245,7 @@ extension RefExtension on Ref {
 extension WidgetRefExtension on WidgetRef {
   Future<T> _refreshFuture<T>(
     Refreshable<Future<T>> refreshable, {
-    bool needRefresh = true,
+    required bool needRefresh,
   }) async {
     if (needRefresh) {
       refresh(refreshable);
@@ -137,62 +253,176 @@ extension WidgetRefExtension on WidgetRef {
     return await read(refreshable);
   }
 
-  Future<T> readAsync<T>(
+  /// [needRefresh] is `true` and [read]'s value isDone then will run [Ref.refresh]
+  /// [refreshWhenHasError] is `true` and [read]'s value hasError then will run [Ref.refresh]
+  /// [throwError] is `true` will rethrow error. On the contrary, will return `null` for [Future].
+  Future<T?> readAsync<T>(
     ProviderListenable<AsyncValue<T>> provider,
     Refreshable<Future<T>> refreshable, {
-    bool needRefresh = true,
+    bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) async {
-    final value = read(provider);
-    return await _refreshFuture(
-      refreshable,
-      needRefresh: needRefresh && value.isDone,
+    try {
+      final value = read(provider);
+      return await _refreshFuture(
+        refreshable,
+        needRefresh: (needRefresh && value.isDone) ||
+            (refreshWhenHasError && value.hasError),
+      );
+    } catch (error) {
+      if (throwError) {
+        rethrow;
+      } else {
+        return null;
+      }
+    }
+  }
+
+  /// read AsyncValue for [FutureProvider].
+  /// watch [readAsync]
+  Future<T?> readFuture<T>(
+    FutureProvider<T> provider, {
+    bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
+  }) {
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
     );
   }
 
-  Future<T> readFuture<T>(
-    FutureProvider<T> provider, {
+  /// read AsyncValue for [AutoDisposeFutureProvider].
+  /// watch [readAsync]
+  ///
+  /// not sure auto dispose provider is readable.
+  Future<T?> readAutoDisposeFuture<T>(
+    AutoDisposeFutureProvider<T> provider, {
     bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) {
-    return readAsync(provider, provider.future, needRefresh: true);
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
   }
 
-  Future<T> readStream<T>(
+  /// read AsyncValue for [StreamProvider].
+  /// watch [readAsync]
+  Future<T?> readStream<T>(
     StreamProvider<T> provider, {
     bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) {
-    return readAsync(provider, provider.future, needRefresh: true);
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
   }
 
-  Future<T> readAsyncNotifier<T>(
+  /// read AsyncValue for [AutoDisposeStreamProvider].
+  /// watch [readAsync]
+  ///
+  /// not sure auto dispose provider is readable.
+  Future<T?> readAutoDisposeStream<T>(
+    AutoDisposeStreamProvider<T> provider, {
+    bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
+  }) {
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
+  }
+
+  /// read AsyncValue for [AsyncNotifierProvider].
+  /// watch [readAsync]
+  Future<T?> readAsyncNotifier<T>(
     AsyncNotifierProvider<AsyncNotifier<T>, T> provider, {
     bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) {
-    return readAsync(provider, provider.future, needRefresh: true);
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
   }
 
+  /// read AsyncValue for [AutoDisposeAsyncNotifierProvider].
+  /// watch [readAsync]
+  ///
   /// not sure auto dispose provider is readable.
-  Future<T> readAutoDisposeAsyncNotifier<T>(
+  Future<T?> readAutoDisposeAsyncNotifier<T>(
     AutoDisposeAsyncNotifierProvider<AutoDisposeAsyncNotifier<T>, T> provider, {
     bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) {
-    return readAsync(provider, provider.future, needRefresh: true);
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
   }
 
-  Future<T> readAsyncNotifierFamily<T, Arg>(
+  /// read AsyncValue for [AsyncNotifierFamilyProvider].
+  /// watch [readAsync]
+  Future<T?> readAsyncNotifierFamily<T, Arg>(
     AsyncNotifierFamilyProvider<FamilyAsyncNotifier<T, Arg>, T, Arg> provider, {
     bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) {
-    return readAsync(provider, provider.future, needRefresh: true);
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
   }
 
+  /// read AsyncValue for [AutoDisposeFamilyAsyncNotifierProvider].
+  /// watch [readAsync]
+  ///
   /// not sure auto dispose provider is readable.
-  Future<T> readAutoDisposeFamilyAsyncNotifier<T, Arg>(
+  Future<T?> readAutoDisposeFamilyAsyncNotifier<T, Arg>(
     AutoDisposeFamilyAsyncNotifierProvider<
             AutoDisposeFamilyAsyncNotifier<T, Arg>, T, Arg>
         provider, {
     bool needRefresh = false,
+    bool refreshWhenHasError = true,
+    bool throwError = false,
   }) {
-    return readAsync(provider, provider.future, needRefresh: true);
+    return readAsync(
+      provider,
+      provider.future,
+      needRefresh: needRefresh,
+      refreshWhenHasError: refreshWhenHasError,
+      throwError: throwError,
+    );
   }
 
   /// if just want read and await data may use
@@ -202,7 +432,9 @@ extension WidgetRefExtension on WidgetRef {
   /// [readAutoDisposeAsyncNotifier],
   /// [readAutoDisposeFamilyAsyncNotifier],
   /// [readFuture],
-  /// [readStream]
+  /// [readAutoDisposeFuture],
+  /// [readStream],
+  /// [readAutoDisposeStream]
   ///
   /// wait data when provider read data first time or refreshing.
   /// default timeout is 15 seconds
