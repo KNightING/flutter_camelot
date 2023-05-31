@@ -4,6 +4,25 @@ import 'package:flutter_camelot/isar_extend.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
+/// ```dart
+/// class AppIsarService extends BaseIsarService {
+//   static final AppIsarService _singleton = AppIsarService._();
+//
+//   AppIsarService._()
+//       : super(
+//           versionNumber: 1,
+//           schemas: [
+//             ...schema,
+//           ],
+//           migrations: [
+//             ...migration
+//           ],
+//         );
+//
+//   factory AppIsarService() {
+//     return _singleton;
+//   }
+/// ```
 abstract class BaseIsarService {
   BaseIsarService({
     required this.versionNumber,

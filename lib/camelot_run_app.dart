@@ -20,7 +20,7 @@ void camelotRunApp({
   required Widget app,
   CamelotServiceConfig? config,
   bool inRiverPodProviderScope = true,
-  bool exitOnError = true,
+  bool exitOnError = false,
 }) {
   // 攔截 Flutter同步異常
   FlutterError.onError = (details) {
@@ -29,7 +29,7 @@ void camelotRunApp({
     final error = details.exception;
     final stack = details.stack ?? StackTrace.current;
     CLog.error(error, stackTrace: stack);
-    config?.handleUncaughtError?.call(true, error, stack);
+    CamelotService().config.handleUncaughtError?.call(true, error, stack);
     if (exitOnError) exit(1);
   };
 
@@ -54,29 +54,37 @@ void camelotRunApp({
         return runApp(app);
       }
     },
-    handleUncaughtError: config?.handleUncaughtError,
   );
 }
 
 R? camelotZonedGuarded<R>(
-  R Function() body, {
-  HandleUncaughtError? handleUncaughtError,
-}) {
+  R Function() body,
+) {
   return runZoned(
     body,
     zoneSpecification: ZoneSpecification(
-      print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
+      print: (
+        Zone self,
+        ZoneDelegate parent,
+        Zone zone,
+        String line,
+      ) {
         if (kDebugMode) {
           parent.print(zone, line);
           CLog.debug(line);
         }
       },
-      handleUncaughtError: (Zone self, ZoneDelegate parent, Zone zone,
-          Object obj, StackTrace stack) {
+      handleUncaughtError: (
+        Zone self,
+        ZoneDelegate parent,
+        Zone zone,
+        Object obj,
+        StackTrace stack,
+      ) {
         // 這裡只會攔截到async function的異常錯誤 / runZonedGuarded的onError相同
         parent.handleUncaughtError(zone, obj, stack);
         CLog.error(obj, stackTrace: stack);
-        handleUncaughtError?.call(false, obj, stack);
+        CamelotService().config.handleUncaughtError?.call(false, obj, stack);
       },
     ),
   );

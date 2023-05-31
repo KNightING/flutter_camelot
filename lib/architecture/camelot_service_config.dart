@@ -13,12 +13,14 @@ abstract class CamelotServiceConfig {
     LoadingOnStart? loadingOnStart,
     VoidCallback? loadingOnEnd,
     HandleUncaughtError? handleUncaughtError,
+    bool printDebugLog = false,
   }) {
     return _CamelotServiceConfig(
       controller: controller ?? DefaultLoadingOnDialogController(),
       loadingOnStart: loadingOnStart,
       loadingOnEnd: loadingOnEnd,
       handleUncaughtError: handleUncaughtError,
+      printDebugLog: printDebugLog,
     );
   }
 
@@ -34,15 +36,17 @@ abstract class CamelotServiceConfig {
   VoidCallback? get loadingOnEnd;
 
   HandleUncaughtError? get handleUncaughtError;
+
+  bool get printDebugLog;
 }
 
 class _CamelotServiceConfig implements CamelotServiceConfig {
-  const _CamelotServiceConfig({
-    required this.controller,
-    this.loadingOnStart,
-    this.loadingOnEnd,
-    this.handleUncaughtError,
-  });
+  const _CamelotServiceConfig(
+      {required this.controller,
+      this.loadingOnStart,
+      this.loadingOnEnd,
+      this.handleUncaughtError,
+      required this.printDebugLog});
 
   @override
   final LoadingOnDialogController controller;
@@ -55,6 +59,9 @@ class _CamelotServiceConfig implements CamelotServiceConfig {
 
   @override
   final HandleUncaughtError? handleUncaughtError;
+
+  @override
+  final bool printDebugLog;
 }
 
 class DefaultLoadingOnDialogController extends LoadingOnDialogController {

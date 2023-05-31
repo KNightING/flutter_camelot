@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_camelot/dio_extend.dart';
 
 import 'camelot_dio_service.dart';
 
 typedef CamelotDioResponse<T> = CamelotDioBaseResponse<T, String>;
 
-///
 /// [errorMessage] 錯誤訊息，[CamelotDioService.getErrorMessageOnException]
 class CamelotDioBaseResponse<R, E> extends Response<R> {
   CamelotDioBaseResponse({

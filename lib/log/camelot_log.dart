@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../architecture.dart';
 import '../camelot_run_app.dart';
 import 'camelot_log_event.dart';
 import 'camelot_log_level.dart';
@@ -19,7 +20,7 @@ class CamelotLog {
   }
 
   static void debug(Object? object) {
-    if (kDebugMode) {
+    if (kDebugMode || CamelotService().config.printDebugLog) {
       write(CamelotLogLevel.debug, object);
     }
   }

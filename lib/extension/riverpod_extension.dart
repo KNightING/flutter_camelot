@@ -10,16 +10,6 @@ extension AsyncValueExtension<T> on AsyncValue<T> {
 }
 
 extension RefExtension on Ref {
-  Future<T> _refreshFuture<T>(
-    Refreshable<Future<T>> refreshable, {
-    required bool needRefresh,
-  }) async {
-    if (needRefresh) {
-      refresh(refreshable);
-    }
-    return await read(refreshable);
-  }
-
   /// [needRefresh] is `true` and [read]'s value isDone then will run [Ref.refresh]
   /// [refreshWhenHasError] is `true` and [read]'s value hasError then will run [Ref.refresh]
   /// [throwError] is `true` will rethrow error. On the contrary, will return `null` for [Future].
@@ -32,11 +22,12 @@ extension RefExtension on Ref {
   }) async {
     try {
       final value = read(provider);
-      return await _refreshFuture(
-        refreshable,
-        needRefresh: (needRefresh && value.isDone) ||
-            (refreshWhenHasError && value.hasError),
-      );
+
+      if ((needRefresh && value.isDone) ||
+          (refreshWhenHasError && value.hasError)) {
+        refresh(refreshable);
+      }
+      return await read(refreshable);
     } catch (error) {
       if (throwError) {
         rethrow;
@@ -243,16 +234,6 @@ extension RefExtension on Ref {
 }
 
 extension WidgetRefExtension on WidgetRef {
-  Future<T> _refreshFuture<T>(
-    Refreshable<Future<T>> refreshable, {
-    required bool needRefresh,
-  }) async {
-    if (needRefresh) {
-      refresh(refreshable);
-    }
-    return await read(refreshable);
-  }
-
   /// [needRefresh] is `true` and [read]'s value isDone then will run [Ref.refresh]
   /// [refreshWhenHasError] is `true` and [read]'s value hasError then will run [Ref.refresh]
   /// [throwError] is `true` will rethrow error. On the contrary, will return `null` for [Future].
@@ -265,11 +246,12 @@ extension WidgetRefExtension on WidgetRef {
   }) async {
     try {
       final value = read(provider);
-      return await _refreshFuture(
-        refreshable,
-        needRefresh: (needRefresh && value.isDone) ||
-            (refreshWhenHasError && value.hasError),
-      );
+
+      if ((needRefresh && value.isDone) ||
+          (refreshWhenHasError && value.hasError)) {
+        refresh(refreshable);
+      }
+      return await read(refreshable);
     } catch (error) {
       if (throwError) {
         rethrow;

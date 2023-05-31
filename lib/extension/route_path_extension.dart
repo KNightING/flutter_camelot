@@ -16,6 +16,8 @@ extension RoutePathWithGoRouterExtension on RoutePath {
     context.pushReplacement(path, extra: extra);
   }
 
+  /// [replace] 無法正確觸發 [ShellRoute]
+  /// 改使用 [go]
   void replace(BuildContext context, {Object? extra}) {
     context.replace(path, extra: extra);
   }
