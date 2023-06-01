@@ -35,7 +35,7 @@ extension DateTimeExtension on DateTime {
     return year == target.year;
   }
 
-  DateTime toNewTimeZoneOffset(Duration newTimeZoneOffset) {
-    return toUtc().add(newTimeZoneOffset);
-  }
+// DateTime toNewTimeZoneOffset(Duration newTimeZoneOffset) {
+//   return toUtc().add(newTimeZoneOffset);
+// }
 }
