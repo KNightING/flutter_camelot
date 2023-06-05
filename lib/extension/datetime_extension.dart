@@ -35,6 +35,7 @@ extension DateTimeExtension on DateTime {
     return year == target.year;
   }
 
+  /// 移除，因為DateTime本身含有timezone的資訊，除非複寫DateTime，否則無法處理timezone
 // DateTime toNewTimeZoneOffset(Duration newTimeZoneOffset) {
 //   return toUtc().add(newTimeZoneOffset);
 // }

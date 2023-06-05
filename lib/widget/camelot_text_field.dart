@@ -173,7 +173,6 @@ class CamelotTextField extends StatefulWidget {
 class _CamelotTextFieldState extends State<CamelotTextField> {
   late FocusNode _focusNode;
   late FocusNode _scapegoatFocusNode;
-  bool readOnly = true;
 
   @override
   void initState() {
@@ -207,8 +206,6 @@ class _CamelotTextFieldState extends State<CamelotTextField> {
     final textField = TextField(
       focusNode: _focusNode,
       keyboardType: widget.keyboardType,
-      // keyboardType:
-      //     Platform.isWindows ? TextInputType.none : widget.keyboardType,
       controller: widget.controller,
       decoration: widget.decoration,
       textInputAction: widget.textInputAction,
