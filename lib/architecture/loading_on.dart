@@ -23,9 +23,9 @@ class LoadingOnEndController {
   VoidCallback? onEnd;
 }
 
-/// 包裝[CamelotServiceConfig.loadingOnStart]與[CamelotServiceConfig.loadingOnEnd]
+/// 包裝[CamelotConfig.loadingOnStart]與[CamelotConfig.loadingOnEnd]
 ///
-/// 如果需要[work]內有用到與[CamelotServiceConfig.loadingOnEnd]衝突的行為，
+/// 如果需要[work]內有用到與[CamelotConfig.loadingOnEnd]衝突的行為，
 /// 請設定在[LoadingOnController.endController]的[LoadingOnEndController.onEnd]，
 /// 例如: 會觸發到關閉LoadingDialog等...
 /// 或也可以在await [loadingOn]之後進行該行為
@@ -33,7 +33,7 @@ Future<T> loadingOn<T>(
   LoadingOnWork<T> work, {
   String? message,
 }) async {
-  return await CamelotService().config.let((config) async {
+  return await Camelot().config.let((config) async {
     final endController = LoadingOnEndController();
     try {
       final dialogController = config.controller;

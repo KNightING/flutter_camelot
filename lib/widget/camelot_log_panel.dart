@@ -1,13 +1,88 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_camelot/extension/context_extension.dart';
-import 'package:flutter_camelot/widget.dart';
+import 'package:flutter_camelot/extension.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../log/camelot_log.dart';
 import '../log/camelot_log_provider.dart';
+import 'camelot_icon_button.dart';
 
-class CamelotLogPanel extends ConsumerStatefulWidget {
+class CamelotLogPanel extends StatefulWidget {
   const CamelotLogPanel({
+    Key? key,
+    required this.builder,
+    this.enableLogPanel = true,
+    this.logPanelHeight = 400,
+    this.whenTapClearFocus = true,
+  }) : super(key: key);
+
+  factory CamelotLogPanel.child({
+    Key? key,
+    required Widget child,
+    bool enableLogPanel = true,
+    double logPanelHeight = 400,
+    bool whenTapClearFocus = true,
+  }) {
+    return CamelotLogPanel(
+      key: key,
+      enableLogPanel: enableLogPanel,
+      logPanelHeight: logPanelHeight,
+      whenTapClearFocus: whenTapClearFocus,
+      builder: (BuildContext context) {
+        return child;
+      },
+    );
+  }
+
+  final bool enableLogPanel;
+
+  final double logPanelHeight;
+
+  final WidgetBuilder builder;
+
+  final bool whenTapClearFocus;
+
+  @override
+  State createState() => CamelotLogPanelState();
+}
+
+class CamelotLogPanelState extends State<CamelotLogPanel> {
+  static CamelotLogPanelState? of(BuildContext context) {
+    final CamelotLogPanelState? result =
+        context.findAncestorStateOfType<CamelotLogPanelState>();
+    return result;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          if (widget.whenTapClearFocus) {
+            final currentFocus = FocusScope.of(context);
+            if (currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          }
+        },
+        child: Stack(
+          children: [
+            Builder(builder: widget.builder),
+            _CamelotLogPanel(
+              enable: widget.enableLogPanel,
+              height: widget.logPanelHeight,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CamelotLogPanel extends ConsumerStatefulWidget {
+  const _CamelotLogPanel({
     Key? key,
     this.enable = true,
     this.height = 400,
@@ -21,7 +96,7 @@ class CamelotLogPanel extends ConsumerStatefulWidget {
   ConsumerState createState() => _CamelotLogPanelState();
 }
 
-class _CamelotLogPanelState extends ConsumerState<CamelotLogPanel> {
+class _CamelotLogPanelState extends ConsumerState<_CamelotLogPanel> {
   late ScrollController scrollController;
 
   void scrollToBottom() {
@@ -50,12 +125,10 @@ class _CamelotLogPanelState extends ConsumerState<CamelotLogPanel> {
   Widget build(BuildContext context) {
     final isOpen = ref.watch(camelotLogPanelProvider);
     final logs = ref.watch(camelotLogsProvider);
-    final (theme, cs, tt) = context.t;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (scrollController.hasClients) {
         scrollToBottom();
-        // scrollController.jumpTo(scrollController.position.maxScrollExtent);
       }
     });
 
@@ -104,18 +177,16 @@ class _CamelotLogPanelState extends ConsumerState<CamelotLogPanel> {
                         height: widget.height,
                         padding: const EdgeInsets.all(8),
                         width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(16),
                             topRight: Radius.circular(16),
                           ),
-                          color: cs.background.withAlpha(230),
+                          color: Colors.black87,
                           boxShadow: [
                             BoxShadow(
-                              color: theme.brightness == Brightness.light
-                                  ? Colors.black26
-                                  : Colors.black54,
-                              offset: const Offset(0, -1),
+                              color: Colors.black54,
+                              offset: Offset(0, -1),
                               blurRadius: 5,
                             )
                           ],
@@ -155,7 +226,7 @@ class _CamelotLogPanelState extends ConsumerState<CamelotLogPanel> {
                                 ),
                               ],
                             ),
-                            Divider(color: cs.onBackground),
+                            Divider(color: Colors.grey.shade400),
                             Expanded(
                               child: SelectionArea(
                                 child: ListView.builder(

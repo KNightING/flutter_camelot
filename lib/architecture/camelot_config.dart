@@ -5,15 +5,19 @@ import 'loading_on.dart';
 typedef LoadingOnStart = void Function(String? message);
 
 typedef HandleUncaughtError = void Function(
-    bool isMain, Object error, StackTrace stack);
+  bool isMain,
+  Object error,
+  StackTrace stack,
+);
 
-abstract class CamelotServiceConfig {
-  factory CamelotServiceConfig({
+abstract class CamelotConfig {
+  factory CamelotConfig({
     LoadingOnDialogController? controller,
     LoadingOnStart? loadingOnStart,
     VoidCallback? loadingOnEnd,
     HandleUncaughtError? handleUncaughtError,
     bool printDebugLog = false,
+    int maxLogSize = 100,
   }) {
     return _CamelotServiceConfig(
       controller: controller ?? DefaultLoadingOnDialogController(),
@@ -21,6 +25,7 @@ abstract class CamelotServiceConfig {
       loadingOnEnd: loadingOnEnd,
       handleUncaughtError: handleUncaughtError,
       printDebugLog: printDebugLog,
+      maxLogSize: maxLogSize,
     );
   }
 
@@ -38,15 +43,19 @@ abstract class CamelotServiceConfig {
   HandleUncaughtError? get handleUncaughtError;
 
   bool get printDebugLog;
+
+  int get maxLogSize;
 }
 
-class _CamelotServiceConfig implements CamelotServiceConfig {
-  const _CamelotServiceConfig(
-      {required this.controller,
-      this.loadingOnStart,
-      this.loadingOnEnd,
-      this.handleUncaughtError,
-      required this.printDebugLog});
+class _CamelotServiceConfig implements CamelotConfig {
+  const _CamelotServiceConfig({
+    required this.controller,
+    this.loadingOnStart,
+    this.loadingOnEnd,
+    this.handleUncaughtError,
+    required this.printDebugLog,
+    required this.maxLogSize,
+  });
 
   @override
   final LoadingOnDialogController controller;
@@ -62,6 +71,9 @@ class _CamelotServiceConfig implements CamelotServiceConfig {
 
   @override
   final bool printDebugLog;
+
+  @override
+  final int maxLogSize;
 }
 
 class DefaultLoadingOnDialogController extends LoadingOnDialogController {

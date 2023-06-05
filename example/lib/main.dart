@@ -10,7 +10,6 @@ import 'package:flutter_camelot/log/camelot_log.dart';
 import 'package:flutter_camelot/util.dart';
 import 'package:flutter_camelot/util/device_util.dart';
 import 'package:flutter_camelot/widget.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
   camelotRunApp(
@@ -18,7 +17,7 @@ void main() {
     initAsyncApp: () async {
       await CamelotDeviceUtil.landscape();
     },
-    app: const ProviderScope(child: MyApp()),
+    app: const MyApp(),
   );
 }
 
@@ -63,7 +62,7 @@ class _MyAppState extends State<MyApp> {
 
   demoOnIntResult(OnResult<int> onResult) {
     onResult.successful(data: 0);
-    onResult.failure( 'failure message');
+    onResult.failure('failure message');
   }
 
   demoOnBoolResult(OnResult<bool> onResult) {
@@ -110,7 +109,7 @@ class _MyAppState extends State<MyApp> {
           primary: const Color(0xFF175D6F),
         ),
       ),
-      home: Camelot(
+      home: CamelotLogPanel(
           logPanelHeight: 300,
           builder: (BuildContext context) {
             final mediaQuery = MediaQuery.of(context);

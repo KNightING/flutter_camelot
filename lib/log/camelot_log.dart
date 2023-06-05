@@ -20,7 +20,7 @@ class CamelotLog {
   }
 
   static void debug(Object? object) {
-    if (kDebugMode || CamelotService().config.printDebugLog) {
+    if (kDebugMode || Camelot().config.printDebugLog) {
       write(CamelotLogLevel.debug, object);
     }
   }

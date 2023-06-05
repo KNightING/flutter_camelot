@@ -3,11 +3,11 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_camelot/architecture/camelot_service.dart';
+import 'package:flutter_camelot/extension/kotlin_like_extension.dart';
 import 'package:flutter_camelot/log/camelot_log.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'architecture/camelot_service_config.dart';
+import 'architecture.dart';
 
 var _runWithCamelotApp = false;
 
@@ -18,18 +18,17 @@ bool get runWithCamelotApp {
 void camelotRunApp({
   Function()? initAsyncApp,
   required Widget app,
-  CamelotServiceConfig? config,
-  bool inRiverPodProviderScope = true,
+  CamelotConfig? config,
+  bool withRiverPodProviderScope = true,
   bool exitOnError = false,
 }) {
   // 攔截 Flutter同步異常
   FlutterError.onError = (details) {
     FlutterError.presentError(details);
-
     final error = details.exception;
     final stack = details.stack ?? StackTrace.current;
     CLog.error(error, stackTrace: stack);
-    CamelotService().config.handleUncaughtError?.call(true, error, stack);
+    Camelot().config.handleUncaughtError?.call(true, error, stack);
     if (exitOnError) exit(1);
   };
 
@@ -45,13 +44,18 @@ void camelotRunApp({
     () async {
       await initAsyncApp?.call();
       if (config != null) {
-        CamelotService().config = config;
+        Camelot().config = config;
       }
       _runWithCamelotApp = true;
-      if (inRiverPodProviderScope) {
-        return runApp(ProviderScope(child: app));
+      final builder = Builder(builder: (context) {
+        Camelot().mediaQuery = MediaQuery.of(context);
+        return app;
+      });
+
+      if (withRiverPodProviderScope) {
+        return runApp(ProviderScope(child: builder));
       } else {
-        return runApp(app);
+        return runApp(builder);
       }
     },
   );
@@ -84,7 +88,7 @@ R? camelotZonedGuarded<R>(
         // 這裡只會攔截到async function的異常錯誤 / runZonedGuarded的onError相同
         parent.handleUncaughtError(zone, obj, stack);
         CLog.error(obj, stackTrace: stack);
-        CamelotService().config.handleUncaughtError?.call(false, obj, stack);
+        Camelot().config.handleUncaughtError?.call(false, obj, stack);
       },
     ),
   );
