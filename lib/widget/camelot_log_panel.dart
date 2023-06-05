@@ -195,11 +195,12 @@ class _CamelotLogPanelState extends ConsumerState<_CamelotLogPanel> {
                           children: [
                             Row(
                               children: [
-                                const Text(
+                                Text(
                                   'CAMELOT LOG PANEL',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
+                                    color: Colors.grey.shade400,
                                   ),
                                 ),
                                 const Spacer(),
