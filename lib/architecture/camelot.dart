@@ -17,9 +17,9 @@ class Camelot {
     controller: DefaultLoadingOnDialogController(),
   );
 
-   double get screenWidth => mediaQuery.size.width / mediaQuery.devicePixelRatio;
+  double get screenWidth => mediaQuery.size.width;
 
-   double get screenHeight  => mediaQuery.size.height / mediaQuery.devicePixelRatio;
+  double get screenHeight => mediaQuery.size.height;
 
   late MediaQueryData mediaQuery;
 }
