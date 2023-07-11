@@ -1,76 +1,58 @@
 import 'dart:async';
 
+import 'package:flutter_camelot/extension/riverpod_extension.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// ref.invalidate 跟 ref.refresh 不會觸發loading
 mixin AutoDisposeAsyncNotifierRefresh<T> on AutoDisposeAsyncNotifier<T> {
-  FutureOr<T> init();
-
-  @override
-  FutureOr<T> build() {
-    return init();
-  }
-
-  Future<void> refresh({bool setStateToLoading = true}) async {
-    if (setStateToLoading) {
+  refresh({
+    bool setLoading = true,
+    bool debounce = true,
+  }) {
+    if (debounce && !state.isDone) return;
+    if (setLoading) {
       state = AsyncValue<T>.loading();
     }
-    state = await AsyncValue.guard<T>(() async {
-      return await init();
-    });
+    ref.invalidateSelf();
   }
 }
 
 mixin AutoDisposeFamilyAsyncNotifierRefresh<T, A>
     on AutoDisposeFamilyAsyncNotifier<T, A> {
-  FutureOr<T> init(A arg);
-
-  @override
-  FutureOr<T> build(A arg) {
-    return init(arg);
-  }
-
-  Future<void> refresh({bool setStateToLoading = true}) async {
-    if (setStateToLoading) {
+  refresh({
+    bool setLoading = true,
+    bool debounce = true,
+  }) {
+    if (debounce && !state.isDone) return;
+    if (setLoading) {
       state = AsyncValue<T>.loading();
     }
-    state = await AsyncValue.guard<T>(() async {
-      return await init(arg);
-    });
+    ref.invalidateSelf();
   }
 }
 
 mixin AsyncNotifierRefresh<T> on AsyncNotifier<T> {
-  FutureOr<T> init();
-
-  @override
-  FutureOr<T> build() {
-    return init();
-  }
-
-  Future<void> refresh({bool setStateToLoading = true}) async {
-    if (setStateToLoading) {
+  refresh({
+    bool setLoading = true,
+    bool debounce = true,
+  }) {
+    if (debounce && !state.isDone) return;
+    if (setLoading) {
       state = AsyncValue<T>.loading();
     }
-    state = await AsyncValue.guard<T>(() async {
-      return await init();
-    });
+    ref.invalidateSelf();
   }
 }
 
 mixin FamilyAsyncNotifierRefresh<T, A> on FamilyAsyncNotifier<T, A> {
-  FutureOr<T> init(A arg);
-
-  @override
-  FutureOr<T> build(A arg) {
-    return init(arg);
-  }
-
-  Future<void> refresh({bool setStateToLoading = true}) async {
-    if (setStateToLoading) {
+  refresh({
+    bool setLoading = true,
+    bool debounce = true,
+  }) {
+    if (debounce && !state.isDone) return;
+    if (setLoading) {
       state = AsyncValue<T>.loading();
     }
-    state = await AsyncValue.guard<T>(() async {
-      return await init(arg);
-    });
+    ref.invalidateSelf();
   }
 }

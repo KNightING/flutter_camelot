@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_camelot/extension.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// 髒資料
@@ -56,15 +57,17 @@ mixin AutoDisposeAsyncNotifierTagRefresh<T> on AutoDisposeAsyncNotifier<T> {
     return init(_generateLatestTag());
   }
 
-  Future<void> refresh({bool setStateToLoading = true}) async {
-    // can't use `const AsyncValue.loading()` in here because it's type is AsyncValue<Never>.
-    // should use `AsyncValue<T>.loading()` or `AsyncLoading<T>()`
-    if (setStateToLoading) {
+  refresh({
+    bool setLoading = true,
+    bool debounce = true,
+  }) {
+    if (debounce && !state.isDone) return;
+    if (setLoading) {
+      // can't use `const AsyncValue.loading()` in here because it's type is AsyncValue<Never>.
+      // should use `AsyncValue<T>.loading()` or `AsyncLoading<T>()`
       state = AsyncValue<T>.loading();
     }
-    state = await AsyncValue.guard<T>(() async {
-      return await init(_generateLatestTag());
-    });
+    ref.invalidateSelf();
   }
 }
 
@@ -97,13 +100,17 @@ mixin AutoDisposeFamilyAsyncNotifierTagRefresh<T, A>
     return init(_generateLatestTag(), arg);
   }
 
-  Future<void> refresh({bool setStateToLoading = true}) async {
-    if (setStateToLoading) {
+  refresh({
+    bool setLoading = true,
+    bool debounce = true,
+  }) {
+    if (debounce && !state.isDone) return;
+    if (setLoading) {
+      // can't use `const AsyncValue.loading()` in here because it's type is AsyncValue<Never>.
+      // should use `AsyncValue<T>.loading()` or `AsyncLoading<T>()`
       state = AsyncValue<T>.loading();
     }
-    state = await AsyncValue.guard<T>(() async {
-      return await init(_generateLatestTag(), arg);
-    });
+    ref.invalidateSelf();
   }
 }
 
@@ -135,13 +142,17 @@ mixin AsyncNotifierTagRefresh<T> on AsyncNotifier<T> {
     return init(_generateLatestTag());
   }
 
-  Future<void> refresh({bool setStateToLoading = true}) async {
-    if (setStateToLoading) {
+  refresh({
+    bool setLoading = true,
+    bool debounce = true,
+  }) {
+    if (debounce && !state.isDone) return;
+    if (setLoading) {
+      // can't use `const AsyncValue.loading()` in here because it's type is AsyncValue<Never>.
+      // should use `AsyncValue<T>.loading()` or `AsyncLoading<T>()`
       state = AsyncValue<T>.loading();
     }
-    state = await AsyncValue.guard<T>(() async {
-      return await init(_generateLatestTag());
-    });
+    ref.invalidateSelf();
   }
 }
 
@@ -173,12 +184,16 @@ mixin FamilyAsyncNotifierTagRefresh<T, A> on FamilyAsyncNotifier<T, A> {
     return init(_generateLatestTag(), arg);
   }
 
-  Future<void> refresh({bool setStateToLoading = true}) async {
-    if (setStateToLoading) {
+  refresh({
+    bool setLoading = true,
+    bool debounce = true,
+  }) {
+    if (debounce && !state.isDone) return;
+    if (setLoading) {
+      // can't use `const AsyncValue.loading()` in here because it's type is AsyncValue<Never>.
+      // should use `AsyncValue<T>.loading()` or `AsyncLoading<T>()`
       state = AsyncValue<T>.loading();
     }
-    state = await AsyncValue.guard<T>(() async {
-      return await init(_generateLatestTag(), arg);
-    });
+    ref.invalidateSelf();
   }
 }
