@@ -1,11 +1,8 @@
+import 'dart:isolate';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_camelot/dio_extend.dart';
-import 'package:flutter_camelot/extension/dio_extension.dart';
-
-import 'camelot_dio.dart';
-import 'camelot_dio_base_response.dart';
-import 'camelot_dio_options.dart';
 
 typedef ResponseParse<T> = T Function(Response response);
 
@@ -49,7 +46,6 @@ abstract class CamelotDioService {
       if (errorResponse == null) {
         return CamelotDioBaseResponse(
           response: Response(requestOptions: errorRequestOptions),
-          // errorMessage: getErrorMessageOnException(error),
           error: CamelotDioError<E>.fromDioError(
             error,
             message: getErrorMessageOnException(error),
@@ -62,13 +58,11 @@ abstract class CamelotDioService {
 
       return CamelotDioBaseResponse(
         response: errorResponse,
-        // errorData: errorData,
         error: CamelotDioError<E>.fromDioError(
           error,
           data: errorData,
           message: errorMessage,
         ),
-        // errorMessage: errorMessage,
       );
     }
 
@@ -83,7 +77,6 @@ abstract class CamelotDioService {
       response: Response(
         requestOptions: requestOptions,
       ),
-      // errorMessage: getErrorMessageOnException(error),
       error: CamelotDioError<E>.fromError(
         error,
         trace,
@@ -93,20 +86,10 @@ abstract class CamelotDioService {
     );
   }
 
-  // /// 刷新token
-  // /// 回傳成功與否
-  // Future<bool> doRefreshToken() async {
-  //   return true;
-  // }
-  //
-  // /// 是否進行刷新，預設會在獲得response status code 為 401時刷新
-  // bool shouldRefreshToken(dynamic error) {
-  //   return error is DioError && error.response?.isUnauthorized == true;
-  // }
-
   /// [R] 呼叫API成功的格式類型
   /// [E] 呼叫API有response但是錯誤且body有內容時的格式類型
   /// [parse] 將body轉換成 [R]，會在[compute]內轉換，故無法使用方法傳遞，會發生錯誤，如下
+  /// * 注意: 因為在[parse]、[errorParse]皆在不同[Isolate]下轉換，所以記憶體資源不會共用
   /// ```dart
   /// R parse(response){
   ///   //do parse
@@ -175,7 +158,6 @@ abstract class CamelotDioService {
     ProgressCallback? onReceiveProgress,
     required ResponseParse<R> parse,
     required ResponseParse<E> errorParse,
-    // bool refreshToken = false,
   }) async {
     try {
       final response = await _dio.get(
@@ -204,26 +186,6 @@ abstract class CamelotDioService {
         errorParse: errorParse,
       );
 
-      // if (refreshToken && shouldRefreshToken(error)) {
-      //   final refreshTokenResult = await doRefreshToken();
-      //
-      //   if (!refreshTokenResult) {
-      //     return failureResponse;
-      //   }
-      //
-      //   return get<R, E>(
-      //     path,
-      //     queryParameters: queryParameters,
-      //     data: data,
-      //     options: options,
-      //     cancelToken: cancelToken,
-      //     onReceiveProgress: onReceiveProgress,
-      //     parse: parse,
-      //     errorParse: errorParse,
-      //     refreshToken: false,
-      //   );
-      // }
-
       return failureResponse;
     }
   }
@@ -239,7 +201,6 @@ abstract class CamelotDioService {
     ProgressCallback? onReceiveProgress,
     required ResponseParse<R> parse,
     required ResponseParse<E> errorParse,
-    // bool refreshToken = false,
   }) async {
     try {
       final response = await _dio.post(
@@ -269,27 +230,6 @@ abstract class CamelotDioService {
         errorParse: errorParse,
       );
 
-      // if (refreshToken && shouldRefreshToken(error)) {
-      //   final refreshTokenResult = await doRefreshToken();
-      //
-      //   if (!refreshTokenResult) {
-      //     return failureResponse;
-      //   }
-      //
-      //   return post<R, E>(
-      //     path,
-      //     queryParameters: queryParameters,
-      //     data: data,
-      //     options: options,
-      //     cancelToken: cancelToken,
-      //     onSendProgress: onSendProgress,
-      //     onReceiveProgress: onReceiveProgress,
-      //     parse: parse,
-      //     errorParse: errorParse,
-      //     refreshToken: false,
-      //   );
-      // }
-
       return failureResponse;
     }
   }
@@ -305,7 +245,6 @@ abstract class CamelotDioService {
     ProgressCallback? onReceiveProgress,
     required ResponseParse<R> parse,
     required ResponseParse<E> errorParse,
-    // bool refreshToken = false,
   }) async {
     try {
       final response = await _dio.patch(
@@ -335,27 +274,6 @@ abstract class CamelotDioService {
         errorParse: errorParse,
       );
 
-      // if (refreshToken && shouldRefreshToken(error)) {
-      //   final refreshTokenResult = await doRefreshToken();
-      //
-      //   if (!refreshTokenResult) {
-      //     return failureResponse;
-      //   }
-      //
-      //   return patch<R, E>(
-      //     path,
-      //     queryParameters: queryParameters,
-      //     data: data,
-      //     options: options,
-      //     cancelToken: cancelToken,
-      //     onSendProgress: onSendProgress,
-      //     onReceiveProgress: onReceiveProgress,
-      //     parse: parse,
-      //     errorParse: errorParse,
-      //     refreshToken: false,
-      //   );
-      // }
-
       return failureResponse;
     }
   }
@@ -371,7 +289,6 @@ abstract class CamelotDioService {
     ProgressCallback? onReceiveProgress,
     required ResponseParse<R> parse,
     required ResponseParse<E> errorParse,
-    // bool refreshToken = false,
   }) async {
     try {
       final response = await _dio.put(
@@ -401,27 +318,6 @@ abstract class CamelotDioService {
         errorParse: errorParse,
       );
 
-      // if (refreshToken && shouldRefreshToken(error)) {
-      //   final refreshTokenResult = await doRefreshToken();
-      //
-      //   if (!refreshTokenResult) {
-      //     return failureResponse;
-      //   }
-      //
-      //   return put<R, E>(
-      //     path,
-      //     queryParameters: queryParameters,
-      //     data: data,
-      //     options: options,
-      //     cancelToken: cancelToken,
-      //     onSendProgress: onSendProgress,
-      //     onReceiveProgress: onReceiveProgress,
-      //     parse: parse,
-      //     errorParse: errorParse,
-      //     refreshToken: false,
-      //   );
-      // }
-
       return failureResponse;
     }
   }
@@ -435,7 +331,6 @@ abstract class CamelotDioService {
     CancelToken? cancelToken,
     required ResponseParse<R> parse,
     required ResponseParse<E> errorParse,
-    // bool refreshToken = false,
   }) async {
     try {
       final response = await _dio.delete(
@@ -463,27 +358,7 @@ abstract class CamelotDioService {
         errorParse: errorParse,
       );
 
-      // if (refreshToken && shouldRefreshToken(error)) {
-      //   final refreshTokenResult = await doRefreshToken();
-      //
-      //   if (!refreshTokenResult) {
-      //     return failureResponse;
-      //   }
-      //
-      //   return delete<R, E>(
-      //     path,
-      //     queryParameters: queryParameters,
-      //     data: data,
-      //     options: options,
-      //     cancelToken: cancelToken,
-      //     parse: parse,
-      //     errorParse: errorParse,
-      //     refreshToken: false,
-      //   );
-      // }
-
       return failureResponse;
     }
   }
 }
-
