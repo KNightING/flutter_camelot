@@ -5,7 +5,7 @@ class CommonUtil {
   /// 防抖動
   /// 時間內連續觸發事件時, 只會觸發最後一次
   /// ex. Scrollbar滾動時callback
-  static Function debounce(
+  static VoidCallback debounce(
       {required VoidCallback func, int delayMilliseconds = 250}) {
     Timer? timer;
 
@@ -17,7 +17,7 @@ class CommonUtil {
 
   /// 節閥
   /// 時間內只會執行一次
-  static Function throttle(
+  static VoidCallback throttle(
       {required VoidCallback func, int timeoutMilliseconds = 250}) {
     int? last;
     Timer? timer;
